@@ -1,0 +1,106 @@
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Cabang {
+    id           String      @id @default(auto()) @map("_id") @db.ObjectId
+    nama         String
+    alamat       String
+    nomorTelepon String
+    email        String
+    Produk       Produk[]
+    BahanBaku    BahanBaku[]
+    Pesanan      Pesanan[]
+    Pengguna     Pengguna[]
+}
+
+model Produk {
+    id               String          @id @default(auto()) @map("_id") @db.ObjectId
+    nama             String
+    deskripsi        String?
+    harga            Float
+    stok             Int
+    bahanBakuResep   Resep[]
+    kategori         KategoriProduk? @relation(fields: [kategoriProdukId], references: [id])
+    Cabang           Cabang          @relation(fields: [cabangId], references: [id])
+    cabangId         String          @db.ObjectId
+    kategoriProdukId String?         @db.ObjectId
+    BahanBaku        BahanBaku?      @relation(fields: [bahanBakuId], references: [id])
+    bahanBakuId      String?         @db.ObjectId
+    DetailPesanan    DetailPesanan[]
+}
+
+model KategoriProduk {
+    id     String   @id @default(auto()) @map("_id") @db.ObjectId
+    nama   String
+    Produk Produk[]
+}
+
+model BahanBaku {
+    id             String          @id @default(auto()) @map("_id") @db.ObjectId
+    nama           String
+    satuan         String
+    stok           Float
+    hargaPerSatuan Float
+    Produk         Produk[]
+    Resep          Resep[]
+    Cabang         Cabang          @relation(fields: [cabangId], references: [id])
+    cabangId       String          @db.ObjectId
+    StokBahanBaku  StokBahanBaku[]
+}
+
+model Resep {
+    id          String    @id @default(auto()) @map("_id") @db.ObjectId
+    jumlah      Float
+    Produk      Produk    @relation(fields: [produkId], references: [id])
+    produkId    String    @db.ObjectId
+    BahanBaku   BahanBaku @relation(fields: [bahanBakuId], references: [id])
+    bahanBakuId String    @db.ObjectId
+}
+
+model Pesanan {
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    tanggal       DateTime
+    namaPelanggan String
+    nomorMeja     Int
+    Cabang        Cabang          @relation(fields: [cabangId], references: [id])
+    cabangId      String          @db.ObjectId
+    DetailPesanan DetailPesanan[]
+}
+
+model DetailPesanan {
+    id          String  @id @default(auto()) @map("_id") @db.ObjectId
+    jumlah      Int
+    hargaSatuan Float
+    subtotal    Float
+    Pesanan     Pesanan @relation(fields: [pesananId], references: [id])
+    pesananId   String  @db.ObjectId
+    Produk      Produk  @relation(fields: [produkId], references: [id])
+    produkId    String  @db.ObjectId
+}
+
+model StokBahanBaku {
+    id                String    @id @default(auto()) @map("_id") @db.ObjectId
+    tanggalPenerimaan DateTime
+    tanggalKadaluarsa DateTime
+    jumlahMasuk       Float
+    jumlahKeluar      Float
+    BahanBaku         BahanBaku @relation(fields: [bahanBakuId], references: [id])
+    bahanBakuId       String    @db.ObjectId
+}
+
+model Pengguna {
+    id       String @id @default(auto()) @map("_id") @db.ObjectId
+    username String
+    password String
+    clerkId  String
+    nama     String
+    peran    String
+    Cabang   Cabang @relation(fields: [cabangId], references: [id])
+    cabangId String @db.ObjectId
+}
