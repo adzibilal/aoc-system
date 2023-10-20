@@ -12,7 +12,7 @@ model Cabang {
     nama         String
     alamat       String
     nomorTelepon String
-    email        String
+    email        String?
     Produk       Produk[]
     BahanBaku    BahanBaku[]
     Pesanan      Pesanan[]
@@ -96,11 +96,10 @@ model StokBahanBaku {
 
 model Pengguna {
     id       String @id @default(auto()) @map("_id") @db.ObjectId
-    username String
+    username String @unique
     password String
-    clerkId  String
+    role     String
     nama     String
-    peran    String
     Cabang   Cabang @relation(fields: [cabangId], references: [id])
     cabangId String @db.ObjectId
 }

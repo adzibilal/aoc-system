@@ -10,9 +10,15 @@ export default function SyncUser() {
         const session = localStorage.getItem("session");
         if (!session) {
             router.push("/sign-in");
+        } else {
+            const { expDateTime } = JSON.parse(session);
+            const now = new Date();
+            if (now > new Date(expDateTime)) {
+                localStorage.removeItem("session");
+                router.push("/sign-in");
+            }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [router]);
 
     return null;
 }
