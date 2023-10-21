@@ -1,12 +1,29 @@
 'use client'
+import { useData } from '@/components/providers/data-provider'
 import { NextPage } from 'next'
 
+interface UserData {
+    id: string
+    username: string
+    password: string
+    role: string
+    nama: string
+    cabangId: string
+}
+
+interface SessionData {
+    user: UserData
+    expDateTime: string
+}
+
 const DashboardPage: NextPage = () => {
-    const session = localStorage.getItem("session");
-    const { user } = JSON.parse(session || "{}");
+    const session: string | null = localStorage.getItem('session')
+    const { user }: SessionData = JSON.parse(session || '{}')
+    const { detailCabang } = useData()
+
     return (
-        <div>
-            <h1>Dashboard Page {user.username}</h1>
+        <div className='p-6'>
+            <h1 className='text-2xl font-bold'>Dashboard Cabang {detailCabang?.nama}</h1>
         </div>
     )
 }

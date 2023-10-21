@@ -8,15 +8,15 @@ generator client {
 }
 
 model Cabang {
-    id           String      @id @default(auto()) @map("_id") @db.ObjectId
-    nama         String
-    alamat       String
-    nomorTelepon String
-    email        String?
-    Produk       Produk[]
-    BahanBaku    BahanBaku[]
-    Pesanan      Pesanan[]
-    Pengguna     Pengguna[]
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    nama          String
+    alamat        String
+    nomorTelepon  String
+    email         String?
+    Produk        Produk[]
+    BahanBaku     BahanBaku[]
+    Pesanan       Pesanan[]
+    AnggotaCabang AnggotaCabang[]
 }
 
 model Produk {
@@ -95,11 +95,18 @@ model StokBahanBaku {
 }
 
 model Pengguna {
-    id       String @id @default(auto()) @map("_id") @db.ObjectId
-    username String @unique
-    password String
-    role     String
-    nama     String
-    Cabang   Cabang @relation(fields: [cabangId], references: [id])
-    cabangId String @db.ObjectId
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    username      String          @unique
+    password      String
+    role          String
+    nama          String
+    AnggotaCabang AnggotaCabang[]
+}
+
+model AnggotaCabang {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    pengguna   Pengguna @relation(fields: [penggunaId], references: [id])
+    penggunaId String   @db.ObjectId
+    cabang     Cabang   @relation(fields: [cabangId], references: [id])
+    cabangId   String   @db.ObjectId
 }

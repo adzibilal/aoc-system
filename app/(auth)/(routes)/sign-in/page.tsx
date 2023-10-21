@@ -55,7 +55,7 @@ export default function Page() {
             localStorage.setItem('session', JSON.stringify(session))
 
             toast.success('Login Berhasil')
-            router.push('/')
+            router.push('/selectcabang')
         } catch {
             toast.error('Something went wrong')
         }
