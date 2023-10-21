@@ -17,8 +17,6 @@ interface SessionData {
 }
 
 const DashboardPage: NextPage = () => {
-    const session: string | null = localStorage.getItem('session')
-    const { user }: SessionData = JSON.parse(session || '{}')
     const { detailCabang } = useData()
 
     return (

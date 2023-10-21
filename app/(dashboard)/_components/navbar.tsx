@@ -4,13 +4,11 @@ import { SessionData } from '@/types'
 import React from 'react'
 import toast from 'react-hot-toast'
 import { MobileSidebar } from './mobile-sidebar'
+import { useData } from '@/components/providers/data-provider'
 
 const Navbar = () => {
-    const session: string | null = localStorage.getItem('session')
-    const { user }: SessionData = JSON.parse(session || '{}')
-    if (!user) {
-        window.location.href = '/sign-in'
-    }
+    const { user } = useData()
+
 
     return (
         <nav className='h-full text-white p-3 flex items-center justify-between px-6'>

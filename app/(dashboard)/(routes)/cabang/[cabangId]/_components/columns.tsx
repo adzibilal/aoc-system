@@ -1,6 +1,6 @@
 "use client"
 
-import { Cabang } from "@prisma/client"
+import { Pengguna } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react"
 import Link from "next/link";
@@ -13,9 +13,8 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
-export const columns: ColumnDef<Cabang>[] = [
+export const columns: ColumnDef<Pengguna>[] = [
   {
     accessorKey: "nama",
     header: ({ column }) => {
@@ -24,52 +23,49 @@ export const columns: ColumnDef<Cabang>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nama Cabang
+          Nama Anggota
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
   },
   {
-    accessorKey: "alamat",
+    accessorKey: "username",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Alamat
+          Username
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    }
+    },
   },
   {
-    accessorKey: "nomorTelepon",
+    accessorKey: "role",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nomor Cabang
+          Role
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    }
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
+    },
+    cell: ({ row }) => {
+      const role = row.getValue("role");
+      switch (role) {
+        case 'admin':
+          return <Badge>Admin</Badge>
+          break;
+          return <Badge>Staff</Badge>
+        default:
+          break;
+      }
     }
   },
   {
