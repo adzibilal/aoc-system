@@ -88,7 +88,12 @@ export const columns: ColumnDef<Pengguna>[] = [
                         onClick={() => table?.options?.meta?.handleDelete(id)}>
                         <Trash className='h-4 w-4' />
                     </Button>
-                    <Button variant='default' size='sm' className='w-max'>
+                    <Button
+                        variant='default'
+                        size='sm'
+                        className='w-max'
+                        //@ts-ignore
+                        onClick={() => table?.options?.meta?.handleEdit(row.original)}>
                         <Pencil className='h-4 w-4' />
                     </Button>
                 </div>

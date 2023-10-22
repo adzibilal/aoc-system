@@ -32,12 +32,20 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
+import { init } from 'next/dist/compiled/webpack/webpack'
 
-interface AddAnggotaProps {
+interface EditPenggunaProps {
+    initialData: {
+        id: string
+        nama: string
+        username: string
+        password: string
+        role: string
+    }
     onClose: () => void
 }
 
-const AddAnggota = ({ onClose }: AddAnggotaProps) => {
+const EditPengguna = ({ onClose, initialData }: EditPenggunaProps) => {
     const router = useRouter()
 
     const formSchema = z.object({
@@ -49,12 +57,7 @@ const AddAnggota = ({ onClose }: AddAnggotaProps) => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            nama: '',
-            username: '',
-            password: '',
-            role: ''
-        }
+        defaultValues: initialData
     })
 
     const { isSubmitting, isValid } = form.formState
@@ -62,8 +65,8 @@ const AddAnggota = ({ onClose }: AddAnggotaProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
-            await axios.post(`/api/pengguna/`, values)
-            toast.success('Pengguna ditambahkan')
+            await axios.patch(`/api/pengguna/${initialData.id}`, values)
+            toast.success('Pengguna diedit')
             onClose()
             router.refresh()
         } catch (error) {
@@ -77,7 +80,7 @@ const AddAnggota = ({ onClose }: AddAnggotaProps) => {
                 className='z-40 bg-black/40 w-screen h-screen fixed top-0 left-0'
                 onClick={onClose}></div>
             <div className='z-50 bg-white p-5 rounded-md top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] fixed w-[90%] max-w-[500px]'>
-                <div className='font-bold text-xl mb-5'>Tambah Pengguna</div>
+                <div className='font-bold text-xl mb-5'>Edit Pengguna</div>
 
                 <Form {...form}>
                     <form
@@ -174,4 +177,4 @@ const AddAnggota = ({ onClose }: AddAnggotaProps) => {
     )
 }
 
-export default AddAnggota
+export default EditPengguna

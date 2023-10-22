@@ -30,6 +30,9 @@ import { db } from '@/lib/db'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import EditPengguna from './edit-pengguna'
+import { Pengguna } from '@prisma/client'
+import { set } from 'react-hook-form'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -48,6 +51,14 @@ export function DataTable<TData, TValue>({
         React.useState<ColumnFiltersState>([])
 
     const [isAdding, setIsAdding] = React.useState(false)
+    const [isEditing, setIsEditing] = React.useState(false)
+    const [dataEdit, setDataEdit] = React.useState<Pengguna>({
+        id: '',
+        nama: '',
+        username: '',
+        password: '',
+        role: '',
+    })
 
     const handleDelete = async (id: string) => {  
         toast.loading('Loading...')
@@ -63,6 +74,10 @@ export function DataTable<TData, TValue>({
             }, 1000)
             router.refresh()
         }
+    }
+    const handleEdit = (pengguna: Pengguna) => {
+        setDataEdit(pengguna)
+        setIsEditing(true)
     }
 
     const table = useReactTable({
@@ -80,7 +95,8 @@ export function DataTable<TData, TValue>({
         },
         meta: {
             cabangId,
-            handleDelete: (id: string) => handleDelete(id)
+            handleDelete: (id: string) => handleDelete(id),
+            handleEdit: (pengguna: Pengguna) => handleEdit(pengguna)
         }
     })
 
@@ -110,6 +126,7 @@ export function DataTable<TData, TValue>({
                     </Button>
                 </div>
                 {isAdding && <AddAnggota onClose={() => setIsAdding(false)} />}
+                {isEditing && <EditPengguna initialData={dataEdit} onClose={() => setIsEditing(false)} />}
             </div>
             <div className='rounded-md border'>
                 <Table>
