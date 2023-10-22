@@ -22,24 +22,41 @@ export async function GET(
 export async function PATCH(
     req: Request,
     { params }: { params: { cabangId: string } }
-  ) {
+) {
     try {
-      const { cabangId } = params;
-      const values = await req.json();
-  
-  
-      const course = await db.cabang.update({
-        where: {
-          id: cabangId
-        },
-        data: {
-          ...values,
-        }
-      });
-  
-      return NextResponse.json(course);
+        const { cabangId } = params
+        const values = await req.json()
+
+        const course = await db.cabang.update({
+            where: {
+                id: cabangId
+            },
+            data: {
+                ...values
+            }
+        })
+
+        return NextResponse.json(course)
     } catch (error) {
-      console.log("[UPDATE CABANG]", error);
-      return new NextResponse("Internal Error", { status: 500 });
+        console.log('[UPDATE CABANG]', error)
+        return new NextResponse('Internal Error', { status: 500 })
     }
-  }
+}
+
+export async function DELETE(
+    req: Request,
+    { params }: { params: { cabangId: string } }
+) {
+    try {
+        const cabang = await db.cabang.delete({
+            where: {
+                id: params.cabangId
+            }
+        })
+
+        return NextResponse.json(cabang)
+    } catch (error) {
+        console.log('[DELETE CABANG]', error)
+        return new NextResponse(`Internal Error ${error}`, { status: 500 })
+    }
+}

@@ -72,7 +72,6 @@ export const columns: ColumnDef<Pengguna>[] = [
     id: "actions",
     cell: ({ row }) => {
       const { id } = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

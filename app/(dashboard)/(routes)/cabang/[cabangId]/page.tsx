@@ -40,7 +40,7 @@ const CabangIdPage = async ({ params }: { params: { cabangId: string } }) => {
             </Button>
             </Link>
             <CabangForm initialData={{nama: cabang?.nama || '', alamat: cabang?.alamat || '', email: cabang?.email || '', nomorTelepon: cabang?.nomorTelepon || ''}} cabangId={cabang?.id}/>
-            <DataTable columns={columns} data={formattedAnggota} />
+            <DataTable cabangId={cabang?.id} columns={columns} data={formattedAnggota} />
         </div>
     )
 }
