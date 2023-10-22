@@ -27,18 +27,13 @@ import {
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 
-const HomePage: NextPage = () => {
+const HomePage = ({ params }: { params: { userId: string } }) => {
     const [open, setOpen] = useState(false)
     const [selectedCabang, setSelectedCabang] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState<string>('')
 
     const router = useRouter()
-    const session: string | null = localStorage.getItem('session')
-    const { user }: SessionData = JSON.parse(session || '{}')
-    if (!user) {
-        router.push('/sign-in')
-    }
-    const userId = user.id
+    const userId = params.userId
     const [cabang, setCabang] = useState<Cabang[]>([])
 
     const getCabangByUserId = async (userId: string) => {
@@ -77,7 +72,7 @@ const HomePage: NextPage = () => {
             router.push('/')
         }
     }
-    
+
     return (
         <div className='w-screen h-screen flex items-center justify-center flex-col'>
             <Image

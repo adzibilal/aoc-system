@@ -78,9 +78,15 @@ export const columns: ColumnDef<Pengguna>[] = [
         cell: ({ row }) => {
           const { id } = row.original
           return (
-            <Button variant='destructive' className='w-max'>
+            <div className="flex items-center gap-3">
+
+            <Button variant='destructive' size='sm' className='w-max'>
               <Trash className='h-4 w-4' />
             </Button>
+            <Button variant='default' size='sm' className='w-max'>
+              <Pencil className='h-4 w-4' />
+            </Button>
+            </div>
           )
         }
     }

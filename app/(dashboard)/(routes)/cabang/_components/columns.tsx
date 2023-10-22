@@ -42,6 +42,15 @@ export const columns: ColumnDef<Cabang>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
+    },
+    cell: ({ row }) => {
+      const { alamat } = row.original;
+
+      return (
+        <div className="flex items-center gap-x-2">
+          <span className="line-clamp-1 w-[300px]">{alamat}</span>
+        </div>
+      )
     }
   },
   {
