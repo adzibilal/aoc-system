@@ -75,19 +75,24 @@ export const columns: ColumnDef<Pengguna>[] = [
     },
     {
         id: 'actions',
-        cell: ({ row }) => {
-          const { id } = row.original
-          return (
-            <div className="flex items-center gap-3">
+        cell: ({ table, row }) => {
+            const { id } = row.original
 
-            <Button variant='destructive' size='sm' className='w-max'>
-              <Trash className='h-4 w-4' />
-            </Button>
-            <Button variant='default' size='sm' className='w-max'>
-              <Pencil className='h-4 w-4' />
-            </Button>
-            </div>
-          )
+            return (
+                <div className='flex items-center gap-3'>
+                    <Button
+                        variant='destructive'
+                        size='sm'
+                        className='w-max'
+                        //@ts-ignore
+                        onClick={() => table?.options?.meta?.handleDelete(id)}>
+                        <Trash className='h-4 w-4' />
+                    </Button>
+                    <Button variant='default' size='sm' className='w-max'>
+                        <Pencil className='h-4 w-4' />
+                    </Button>
+                </div>
+            )
         }
     }
 ]

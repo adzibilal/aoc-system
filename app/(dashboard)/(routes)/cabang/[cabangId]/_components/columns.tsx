@@ -75,13 +75,16 @@ export const columns: ColumnDef<Pengguna>[] = [
     },
     {
         id: 'actions',
-        cell: ({ row }) => {
-          const { id } = row.original
-          return (
-            <Button variant='destructive' className='w-max'>
-              <Trash className='h-4 w-4' />
-            </Button>
-          )
+        cell: ({ table, row }) => {
+            const { id } = row.original
+            return (
+                <Button
+                    variant='destructive'
+                    className='w-max' //@ts-ignore
+                    onClick={() => table?.options?.meta?.handleDelete(id)}>
+                    <Trash className='h-4 w-4' />
+                </Button>
+            )
         }
     }
 ]

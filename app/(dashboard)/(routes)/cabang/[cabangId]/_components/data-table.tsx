@@ -28,6 +28,9 @@ import { Input } from '@/components/ui/input'
 import AddAnggota from './add-anggota'
 import { db } from '@/lib/db'
 import DeleteCabang from '../../_components/delete-cabang'
+import toast from 'react-hot-toast'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -40,11 +43,28 @@ export function DataTable<TData, TValue>({
     data,
     cabangId
 }: DataTableProps<TData, TValue>) {
+    const router = useRouter()
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([])
 
     const [isAdding, setIsAdding] = React.useState(false)
+
+    const handleDelete = async (id: string) => {  
+        toast.loading('Loading...')
+        try {
+            await axios.delete(`/api/cabang/${cabangId}/anggota/${id}`)
+            toast.success('Anggota berhasil dihapus')
+        } catch (error) {
+            console.log(error)
+            toast.error('Anggota gagal dihapus')
+        }finally{
+            setTimeout(() => {
+                toast.dismiss()
+            }, 1000)
+            router.refresh()
+        }
+    }
 
     const table = useReactTable({
         data,
@@ -58,6 +78,10 @@ export function DataTable<TData, TValue>({
         state: {
             sorting,
             columnFilters
+        },
+        meta: {
+            cabangId,
+            handleDelete: (id: string) => handleDelete(id)
         }
     })
 

@@ -68,22 +68,3 @@ export async function GET(
     }
 }
 
-//buatkan fungsi DELETE untuk menghapus anggota cabang
-export async function DELETE(
-    req: Request
-) {
-    try {
-        const values = await req.json()
-
-        const anggota = await db.anggotaCabang.delete({
-            where: {
-                id: values.id 
-            }
-        })
-
-        return NextResponse.json(anggota)
-    } catch (error) {
-        console.log('[DELETE ANGOTA]', error)
-        return new NextResponse('Internal Error', { status: 500 })
-    }
-}
