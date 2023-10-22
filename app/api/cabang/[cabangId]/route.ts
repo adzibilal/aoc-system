@@ -18,3 +18,28 @@ export async function GET(
         return new NextResponse('Internal Error', { status: 500 })
     }
 }
+
+export async function PATCH(
+    req: Request,
+    { params }: { params: { cabangId: string } }
+  ) {
+    try {
+      const { cabangId } = params;
+      const values = await req.json();
+  
+  
+      const course = await db.cabang.update({
+        where: {
+          id: cabangId
+        },
+        data: {
+          ...values,
+        }
+      });
+  
+      return NextResponse.json(course);
+    } catch (error) {
+      console.log("[UPDATE CABANG]", error);
+      return new NextResponse("Internal Error", { status: 500 });
+    }
+  }

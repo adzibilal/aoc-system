@@ -5,6 +5,7 @@ import { columns } from './_components/columns'
 import { Button } from '@/components/ui/button'
 import { ArrowLeftIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
+import { CabangForm } from './_components/cabang-form'
 
 const CabangIdPage = async ({ params }: { params: { cabangId: string } }) => {
     const cabang = await db.cabang.findUnique({
@@ -38,7 +39,7 @@ const CabangIdPage = async ({ params }: { params: { cabangId: string } }) => {
                 Kembali
             </Button>
             </Link>
-            <div className=''>{cabang?.nama}</div>
+            <CabangForm initialData={{nama: cabang?.nama || '', alamat: cabang?.alamat || '', email: cabang?.email || '', nomorTelepon: cabang?.nomorTelepon || ''}} cabangId={cabang?.id}/>
             <DataTable columns={columns} data={formattedAnggota} />
         </div>
     )
