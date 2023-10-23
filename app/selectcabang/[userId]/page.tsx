@@ -39,7 +39,7 @@ const HomePage = ({ params }: { params: { userId: string } }) => {
     const getCabangByUserId = async (userId: string) => {
         try {
             const response = await axios.get(
-                `/api/cabang-user?userId=${userId}`
+                `/api/cabang-user/${userId}`
             )
             setCabang(response.data)
         } catch (error) {
