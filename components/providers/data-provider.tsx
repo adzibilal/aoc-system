@@ -17,7 +17,7 @@ type Data = {
     count: number
     increment: () => void
     detailCabang: any
-    user: UserData
+    userData: any
 }
 
 // Create a context with an initial value
@@ -30,10 +30,15 @@ type DataProviderProps = {
 
 // DataProvider component
 export function DataProvider({ children }: DataProviderProps): ReactElement {
-    
     const [count, setCount] = useState(0)
     const [detailCabang, setDetailCabang] = useState(null)
-    
+    const [userData, setUserData] = useState<{
+        id: string
+        username: string
+        role: string
+        nama: string
+    } | null>(null)
+
     const increment = () => {
         setCount(count + 1)
     }
@@ -54,20 +59,28 @@ export function DataProvider({ children }: DataProviderProps): ReactElement {
 
     const { user }: SessionData = JSON.parse(session || '{}')
 
+    const getUserData = async () => {
+        const userRes = await axios.get(`/api/pengguna/${user.id}`)
+        return setUserData(userRes.data)
+    }
+
+    const fetchData = async () => {
+        const result = await axios(`/api/cabang/${cabangId}`)
+        setDetailCabang(result.data)
+    }
+
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios(`/api/cabang/${cabangId}`)
-            setDetailCabang(result.data)
-        }
         fetchData()
-    }, [cabangId])
+        getUserData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // Create a data object to share through the context
     const data: Data = {
         count,
         increment,
         detailCabang,
-        user
+        userData
     }
 
     return <DataContext.Provider value={data}>{children}</DataContext.Provider>

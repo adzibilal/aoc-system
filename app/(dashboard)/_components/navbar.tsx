@@ -7,14 +7,14 @@ import { MobileSidebar } from './mobile-sidebar'
 import { useData } from '@/components/providers/data-provider'
 
 const Navbar = () => {
-    const { user } = useData()
+    const { userData } = useData()
 
 
     return (
         <nav className='h-full text-white p-3 flex items-center justify-between px-6'>
             <div className='flex items-center gap-3'>
                 <MobileSidebar />
-                <div className=''>Hello {user?.nama}</div>
+                <div className=''>Hello {userData?.nama}</div>
             </div>
             <Button
                 variant='secondary'
