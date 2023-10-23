@@ -33,18 +33,20 @@ export function DataProvider({ children }: DataProviderProps): ReactElement {
     
     const [count, setCount] = useState(0)
     const [detailCabang, setDetailCabang] = useState(null)
-    const cabangId = localStorage.getItem('selectedCabang')
+    
     const increment = () => {
         setCount(count + 1)
     }
 
     let session: string | null = null
+    let cabangId: string | null = null
     if (
         typeof window !== 'undefined' &&
         typeof window.localStorage !== 'undefined'
     ) {
         // Access localStorage here
         session = localStorage.getItem('session')
+        cabangId = localStorage.getItem('selectedCabang')
         if (!session) {
             window.location.href = '/sign-in'
         }
