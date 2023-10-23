@@ -1,5 +1,5 @@
-import { db } from "@/lib/db"
-import { NextResponse } from "next/server"
+import { db } from '@/lib/db'
+import { NextResponse } from 'next/server'
 
 export async function GET(
     req: Request,
@@ -16,7 +16,7 @@ export async function GET(
                 id: true,
                 nama: true,
                 username: true,
-                role: true,
+                role: true
             }
         })
 
@@ -47,7 +47,7 @@ export async function DELETE(
     }
 }
 
-export async function PATCH (
+export async function PATCH(
     req: Request,
     { params }: { params: { penggunaId: string } }
 ) {

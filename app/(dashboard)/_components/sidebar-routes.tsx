@@ -10,7 +10,8 @@ import {
     Book,
     Calculator,
     ShoppingBasket,
-    Store
+    Store,
+    Box
 } from 'lucide-react'
 import { SidebarItem } from './sidebar-item'
 import { usePathname, useRouter } from 'next/navigation'
@@ -35,6 +36,11 @@ const guestRoutes = [
         icon: Coffee,
         label: 'Product',
         href: '/product'
+    },
+    {
+        icon: Box,
+        label: 'Kategori',
+        href: '/kategori'
     },
     {
         icon: Book,
