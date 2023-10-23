@@ -7,17 +7,20 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+import { DialogPortalProps } from "@radix-ui/react-dialog"
+
+type SheetPortalProps = DialogPortalProps & {
+  className?: string
+}
+
 const Sheet = SheetPrimitive.Root
 
 const SheetTrigger = SheetPrimitive.Trigger
 
 const SheetClose = SheetPrimitive.Close
 
-const SheetPortal = ({
-  className,
-  ...props
-}: SheetPrimitive.DialogPortalProps) => (
-  <SheetPrimitive.Portal className={cn(className)} {...props} />
+const SheetPortal = (props: SheetPortalProps) => (
+  <SheetPrimitive.Portal {...props} />
 )
 SheetPortal.displayName = SheetPrimitive.Portal.displayName
 
