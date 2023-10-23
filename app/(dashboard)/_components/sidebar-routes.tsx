@@ -34,8 +34,8 @@ const guestRoutes = [
     },
     {
         icon: Coffee,
-        label: 'Product',
-        href: '/product'
+        label: 'Produk',
+        href: '/produk'
     },
     {
         icon: Box,

@@ -19,3 +19,20 @@ export async function POST(
         return new NextResponse('Internal Error', { status: 500 })
     }
 }
+
+export async function GET(
+    req: Request
+) {
+    try {
+        const kategori = await db.kategoriProduk.findMany({
+            orderBy: {
+                id: 'asc'
+            }
+        })
+
+        return NextResponse.json(kategori)
+    } catch (error) {
+        console.log('[GET KATEGORI]', error)
+        return new NextResponse('Internal Error', { status: 500 })
+    }
+}

@@ -24,14 +24,11 @@ model Produk {
     nama             String
     deskripsi        String?
     harga            Float
-    stok             Int
     bahanBakuResep   Resep[]
-    kategori         KategoriProduk? @relation(fields: [kategoriProdukId], references: [id])
     Cabang           Cabang          @relation(fields: [cabangId], references: [id])
     cabangId         String          @db.ObjectId
+    kategori         KategoriProduk? @relation(fields: [kategoriProdukId], references: [id])
     kategoriProdukId String?         @db.ObjectId
-    BahanBaku        BahanBaku?      @relation(fields: [bahanBakuId], references: [id])
-    bahanBakuId      String?         @db.ObjectId
     DetailPesanan    DetailPesanan[]
 }
 
@@ -47,7 +44,6 @@ model BahanBaku {
     satuan         String
     stok           Float
     hargaPerSatuan Float
-    Produk         Produk[]
     Resep          Resep[]
     Cabang         Cabang          @relation(fields: [cabangId], references: [id])
     cabangId       String          @db.ObjectId
@@ -67,7 +63,8 @@ model Pesanan {
     id            String          @id @default(auto()) @map("_id") @db.ObjectId
     tanggal       DateTime
     namaPelanggan String
-    nomorMeja     Int
+    nomorMeja     Int?
+    status        String          @default("BELUM DIBAYAR")
     Cabang        Cabang          @relation(fields: [cabangId], references: [id])
     cabangId      String          @db.ObjectId
     DetailPesanan DetailPesanan[]
