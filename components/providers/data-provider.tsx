@@ -10,13 +10,14 @@ import React, {
 
 import axios from 'axios'
 import { SessionData, UserData } from '@/types'
+import { Cabang } from '@prisma/client'
 
 // Define the shape of your data (you can replace this with your own data structure)
 type Data = {
     // Define your data structure here
     count: number
     increment: () => void
-    detailCabang: any
+    detailCabang: Cabang | null
     userData: any
 }
 
@@ -74,6 +75,8 @@ export function DataProvider({ children }: DataProviderProps): ReactElement {
         getUserData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+
 
     // Create a data object to share through the context
     const data: Data = {
