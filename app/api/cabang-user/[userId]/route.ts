@@ -1,9 +1,12 @@
 import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(req: NextRequest) {
+export async function GET(
+    req: NextRequest,
+    { params }: { params: { userId: string } }
+) {
     try {
-        const userId = req.nextUrl.searchParams.get('userId')
+        const userId = params.userId
         if (!userId) {
             return new NextResponse(
                 'Missing userId parameter in the request.',

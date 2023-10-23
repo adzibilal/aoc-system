@@ -30,17 +30,26 @@ type DataProviderProps = {
 
 // DataProvider component
 export function DataProvider({ children }: DataProviderProps): ReactElement {
-    const session: string | null = localStorage.getItem('session')
-    if (!session) {
-        window.location.href = '/sign-in'
-    }
+    
     const [count, setCount] = useState(0)
     const [detailCabang, setDetailCabang] = useState(null)
     const cabangId = localStorage.getItem('selectedCabang')
     const increment = () => {
         setCount(count + 1)
     }
-   
+
+    let session: string | null = null
+    if (
+        typeof window !== 'undefined' &&
+        typeof window.localStorage !== 'undefined'
+    ) {
+        // Access localStorage here
+        session = localStorage.getItem('session')
+        if (!session) {
+            window.location.href = '/sign-in'
+        }
+    }
+
     const { user }: SessionData = JSON.parse(session || '{}')
 
     useEffect(() => {
