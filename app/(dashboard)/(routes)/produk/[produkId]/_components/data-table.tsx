@@ -25,23 +25,24 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import AddAnggota from './add-anggota'
 import { db } from '@/lib/db'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import AddResep from './add-resep'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     cabangId?: string
-    produkId?: string   
+    produkId?: string
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
-    cabangId
+    cabangId,
+    produkId
 }: DataTableProps<TData, TValue>) {
     const router = useRouter()
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -50,15 +51,15 @@ export function DataTable<TData, TValue>({
 
     const [isAdding, setIsAdding] = React.useState(false)
 
-    const handleDelete = async (id: string) => {  
+    const handleDelete = async (id: string) => {
         toast.loading('Loading...')
         try {
-            await axios.delete(`/api/cabang/${cabangId}/anggota/${id}`)
-            toast.success('Anggota berhasil dihapus')
+            await axios.delete(`/api/produk/${produkId}/resep/${id}`)
+            toast.success('Resep berhasil dihapus')
         } catch (error) {
             console.log(error)
-            toast.error('Anggota gagal dihapus')
-        }finally{
+            toast.error('Resep gagal dihapus')
+        } finally {
             setTimeout(() => {
                 toast.dismiss()
             }, 1000)
@@ -111,9 +112,11 @@ export function DataTable<TData, TValue>({
                     </Button>
                 </div>
                 {isAdding && (
-                    <AddAnggota
+                    <AddResep
                         cabangId={cabangId}
+                        produkId={produkId}
                         onClose={() => setIsAdding(false)}
+                        onSuccess={() => router.refresh()}
                     />
                 )}
             </div>

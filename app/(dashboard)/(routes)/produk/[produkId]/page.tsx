@@ -52,6 +52,7 @@ const ProdukIdPage = async ({ params }: { params: { produkId: string } }) => {
                 kategori={produk?.kategori?.nama}
             />
             <DataTable
+                cabangId={produk?.cabangId}
                 produkId={produk?.id}
                 columns={columns}
                 data={formattedResep}

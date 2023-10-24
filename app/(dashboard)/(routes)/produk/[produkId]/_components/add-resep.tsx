@@ -6,13 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem
-} from '@/components/ui/command'
-import {
     Form,
     FormControl,
     FormDescription,
@@ -21,45 +14,47 @@ import {
     FormLabel,
     FormMessage
 } from '@/components/ui/form'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger
-} from '@/components/ui/popover'
 
 import { Button } from '@/components/ui/button'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
-import { db } from '@/lib/db'
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
-import { cn } from '@/lib/utils'
-import { Pengguna } from '@prisma/client'
 import { Combobox } from '@/components/ui/combobox'
+import { Input } from '@/components/ui/input'
 
-interface AddAnggotaProps {
+interface AddResepProps {
     onClose: () => void
+    onSuccess: () => void
     cabangId?: string
+    produkId?: string
 }
 
-interface dataPengguna {
+interface dataBahanBaku {
     label: string
     value: string
 }
 
-const AddAnggota = ({ onClose, cabangId }: AddAnggotaProps) => {
-    const [dataPengguna, setDataPengguna] = useState<dataPengguna[]>([])
+const AddResep = ({
+    onClose,
+    onSuccess,
+    cabangId,
+    produkId
+}: AddResepProps) => {
+    const [dataBahanBaku, setDataBahanBaku] = useState<dataBahanBaku[]>([])
+
     const router = useRouter()
 
     const formSchema = z.object({
-        penggunaId: z.string().min(1),
-        cabangId: z.string().min(1)
+        jumlah: z.string().min(1, { message: 'Jumlah wajib di isi' }),
+        bahanBakuId: z.string().min(1, { message: 'Bahan Baku wajib di isi' }),
+        produkId: z.string().min(1, { message: 'Produk wajib di isi' })
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            penggunaId: '',
-            cabangId: cabangId
+            jumlah: '',
+            bahanBakuId: '',
+            produkId: produkId
         }
     })
 
@@ -68,46 +63,35 @@ const AddAnggota = ({ onClose, cabangId }: AddAnggotaProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
-            await axios.post(`/api/cabang/${cabangId}/anggota`, values)
-            toast.success('Cabang updated')
+            await axios.post(`/api/produk/${produkId}/resep`, values)
+            toast.success('Resep ditambahkan')
             onClose()
             router.refresh()
-        } catch (error) {
-            toast.error('Something went wrong')
-        }
-    }
-
-    const getPengguna = async () => {
-        try {
-            // console.error(values)
-            const pengguna = await axios.get(`/api/cabang/${cabangId}/anggota`)
-
-            setDataPengguna(
-                pengguna.data.map((item: { nama: string; id: string }) => ({
-                    label: item.nama,
-                    value: item.id
-                }))
-            )
+            onSuccess()
         } catch (error) {
             toast.error('Something went wrong')
         }
     }
 
     useEffect(() => {
-        const getPengguna = async () => {
+        const getBahanBaku = async () => {
             try {
-                const pengguna = await axios.get(`/api/cabang/${cabangId}/anggota`)
-                setDataPengguna(
-                    pengguna.data.map((item: { nama: string; id: string }) => ({
-                        label: item.nama,
-                        value: item.id
-                    }))
+                const bahanBaku = await axios.get(
+                    `/api/cabang/${cabangId}/bahan-baku`
+                )
+                setDataBahanBaku(
+                    bahanBaku.data.map(
+                        (item: { nama: string; id: string }) => ({
+                            label: item.nama,
+                            value: item.id
+                        })
+                    )
                 )
             } catch (error) {
                 toast.error('Something went wrong')
             }
         }
-        getPengguna()
+        getBahanBaku()
     }, [cabangId])
 
     return (
@@ -116,7 +100,7 @@ const AddAnggota = ({ onClose, cabangId }: AddAnggotaProps) => {
                 className='z-40 bg-black/40 w-screen h-screen fixed top-0 left-0'
                 onClick={onClose}></div>
             <div className='z-50 bg-white p-5 rounded-md top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] fixed w-[90%] max-w-[500px]'>
-                <div className='font-bold text-xl mb-5'>Tambah Anggota</div>
+                <div className='font-bold text-xl mb-5'>Tambah Resep</div>
 
                 <Form {...form}>
                     <form
@@ -124,25 +108,42 @@ const AddAnggota = ({ onClose, cabangId }: AddAnggotaProps) => {
                         className='space-y-4 mt-4'>
                         <FormField
                             control={form.control}
-                            name='penggunaId'
+                            name='bahanBakuId'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Pengguna</FormLabel>
+                                    <FormLabel>Bahan Baku</FormLabel>
                                     <Combobox
-                                        options={...dataPengguna}
+                                        options={...dataBahanBaku}
                                         {...field}
                                     />
                                     <FormDescription>
-                                       Pilih pengguna yang akan di tambahkan ke anggota cabang
+                                        Pilih Bahan Baku
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name='jumlah'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Jumlah bahan</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type='number'
+                                            disabled={isSubmitting}
+                                            placeholder='Jumlah bahan ...'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <div className='flex items-center gap-x-2'>
-                            <Button
-                                disabled={!isValid || isSubmitting}
-                                type='submit'>
+                            <Button disabled={isSubmitting} type='submit'>
                                 Save
                             </Button>
                         </div>
@@ -153,4 +154,4 @@ const AddAnggota = ({ onClose, cabangId }: AddAnggotaProps) => {
     )
 }
 
-export default AddAnggota
+export default AddResep
