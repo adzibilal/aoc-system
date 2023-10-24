@@ -60,6 +60,7 @@ export function DataTable<TData, TValue>({
         harga: 0,
         cabangId: cabangId!,
         kategoriProdukId: '',
+        image: '',
         createdAt: new Date(),
         updatedAt: new Date()
     })
