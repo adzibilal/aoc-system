@@ -22,6 +22,7 @@ const BahanBakuPage = () => {
             harga: 0,
             cabangId: cabangId!,
             kategoriProdukId: '',
+            image: '',
             createdAt: new Date(),
             updatedAt: new Date()
         }
