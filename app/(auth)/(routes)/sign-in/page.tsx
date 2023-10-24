@@ -17,6 +17,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import toast from 'react-hot-toast'
+import md5 from 'md5'
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -43,7 +44,8 @@ export default function Page() {
     try {
 
       const response = await axios.post('/api/login', {
-        ...values
+        ...values,
+        password: md5(values.password)
       })
 
       //buat const variable expDate untuk token expired
