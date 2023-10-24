@@ -19,6 +19,8 @@ import { Pencil } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { Badge } from '@/components/ui/badge'
+import { Combobox } from '@/components/ui/combobox'
 
 interface CabangFormProps {
     initialData: {
@@ -26,6 +28,7 @@ interface CabangFormProps {
         alamat: string
         email?: string
         nomorTelepon: string
+        status?: string
     }
     cabangId?: string
 }
@@ -34,7 +37,8 @@ const formSchema = z.object({
     nama: z.string().min(1),
     alamat: z.string().min(1),
     email: z.string().min(1),
-    nomorTelepon: z.string().min(1)
+    nomorTelepon: z.string().min(1),
+    status: z.string().min(1)
 })
 
 export const CabangForm = ({ initialData, cabangId }: CabangFormProps) => {
@@ -79,6 +83,9 @@ export const CabangForm = ({ initialData, cabangId }: CabangFormProps) => {
             </div>
             {!isEditing ? (
                 <>
+                <Badge className='mt-2 uppercase' variant='default'>
+                    {initialData.status}
+                </Badge>
                 <p className='mt-2 font-bold text-2xl'>{initialData.nama}</p>
                 <p className='mt-2 text-zinc-600 text-sm'>{initialData.alamat}</p>
                 <p className='mt-2 text-sm'>{initialData.nomorTelepon}</p>
@@ -94,6 +101,7 @@ export const CabangForm = ({ initialData, cabangId }: CabangFormProps) => {
                             name='nama'
                             render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel>Nama Cabang</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={isSubmitting}
@@ -110,6 +118,7 @@ export const CabangForm = ({ initialData, cabangId }: CabangFormProps) => {
                             name='alamat'
                             render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel>Alamat Cabang</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={isSubmitting}
@@ -126,6 +135,7 @@ export const CabangForm = ({ initialData, cabangId }: CabangFormProps) => {
                             name='nomorTelepon'
                             render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel>Nomor Cabang</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={isSubmitting}
@@ -142,10 +152,37 @@ export const CabangForm = ({ initialData, cabangId }: CabangFormProps) => {
                             name='email'
                             render={({ field }) => (
                                 <FormItem>
+                                    <FormLabel>Email Cabang</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={isSubmitting}
                                             placeholder="Email cabang ..."
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='status'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Status Cabang</FormLabel>
+                                    <FormControl>
+                                        <Combobox
+                                            options={[
+                                                {
+                                                    value: 'aktif',
+                                                    label: 'Aktif'
+                                                },
+                                                {
+                                                    value: 'nonaktif',
+                                                    label: 'Nonaktif'
+                                                },
+                                                
+                                            ]}
                                             {...field}
                                         />
                                     </FormControl>

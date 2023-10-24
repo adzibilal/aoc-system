@@ -82,6 +82,35 @@ export const columns: ColumnDef<Cabang>[] = [
     }
   },
   {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const { status } = row.original;
+
+      return (
+        <Badge
+          className={cn({
+            "uppercase": true,
+            "bg-green-100 text-green-800": status === "aktif",
+            "bg-red-100 text-red-800": status === "nonaktif"
+          })}
+        >
+          {status}
+        </Badge>
+      )
+    }
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const { id } = row.original;

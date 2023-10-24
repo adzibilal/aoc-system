@@ -13,6 +13,7 @@ model Cabang {
     alamat        String
     nomorTelepon  String
     email         String?
+    status        String?         @default("aktif")
     Produk        Produk[]
     BahanBaku     BahanBaku[]
     Pesanan       Pesanan[]

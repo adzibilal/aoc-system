@@ -34,13 +34,26 @@ const CabangIdPage = async ({ params }: { params: { cabangId: string } }) => {
     return (
         <div className='p-6'>
             <Link href='/cabang'>
-            <Button className='mb-4' variant='outline'>
-                <ArrowLeftIcon className='mr-3'/>
-                Kembali
-            </Button>
+                <Button className='mb-4' variant='outline'>
+                    <ArrowLeftIcon className='mr-3' />
+                    Kembali
+                </Button>
             </Link>
-            <CabangForm initialData={{nama: cabang?.nama || '', alamat: cabang?.alamat || '', email: cabang?.email || '', nomorTelepon: cabang?.nomorTelepon || ''}} cabangId={cabang?.id}/>
-            <DataTable cabangId={cabang?.id} columns={columns} data={formattedAnggota} />
+            <CabangForm
+                initialData={{
+                    nama: cabang?.nama || '',
+                    alamat: cabang?.alamat || '',
+                    email: cabang?.email || '',
+                    nomorTelepon: cabang?.nomorTelepon || '',
+                    status: cabang?.status || ''
+                }}
+                cabangId={cabang?.id}
+            />
+            <DataTable
+                cabangId={cabang?.id}
+                columns={columns}
+                data={formattedAnggota}
+            />
         </div>
     )
 }

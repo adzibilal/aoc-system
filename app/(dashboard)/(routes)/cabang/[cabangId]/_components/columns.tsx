@@ -14,7 +14,15 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
 
-export const columns: ColumnDef<Pengguna>[] = [
+interface ColumnsProps {
+    id: string;
+    username: string;
+    password: string;
+    role: string;
+    nama: string;
+}
+
+export const columns: ColumnDef<ColumnsProps>[] = [
     {
         accessorKey: 'nama',
         header: ({ column }) => {
