@@ -32,6 +32,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
+import md5 from 'md5'
 
 interface AddAnggotaProps {
     onClose: () => void
@@ -62,7 +63,10 @@ const AddAnggota = ({ onClose }: AddAnggotaProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
-            await axios.post(`/api/pengguna/`, values)
+            await axios.post(`/api/pengguna/`, {
+                ...values,
+                password: md5(values.password)
+            })
             toast.success('Pengguna ditambahkan')
             onClose()
             router.refresh()

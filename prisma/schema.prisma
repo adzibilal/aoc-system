@@ -131,3 +131,24 @@ model AnggotaCabang {
     createdAt  DateTime? @default(now())
     updatedAt  DateTime? @updatedAt
 }
+
+model Inventory {
+    id        String            @id @default(auto()) @map("_id") @db.ObjectId
+    name      String
+    detail    InventoryDetail[]
+    createdAt DateTime?         @default(now())
+    updatedAt DateTime?         @updatedAt
+}
+
+model InventoryDetail {
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    month       Int
+    year        Int
+    stockAwal   Int
+    stockAkhir  Int
+    keterangan  String
+    createdAt   DateTime?  @default(now())
+    updatedAt   DateTime?  @updatedAt
+    Inventory   Inventory? @relation(fields: [inventoryId], references: [id])
+    inventoryId String?    @db.ObjectId
+}

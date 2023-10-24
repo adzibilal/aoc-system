@@ -33,6 +33,7 @@ import { useRouter } from 'next/navigation'
 import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
 import { init } from 'next/dist/compiled/webpack/webpack'
+import md5 from 'md5'
 
 interface EditPenggunaProps {
     initialData: {
@@ -65,7 +66,10 @@ const EditPengguna = ({ onClose, initialData }: EditPenggunaProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
-            await axios.patch(`/api/pengguna/${initialData.id}`, values)
+            await axios.patch(`/api/pengguna/${initialData.id}`, {
+                ...values,
+                value: md5(values.password)
+            })
             toast.success('Pengguna diedit')
             onClose()
             router.refresh()

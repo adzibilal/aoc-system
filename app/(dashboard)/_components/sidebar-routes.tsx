@@ -11,7 +11,9 @@ import {
     Calculator,
     ShoppingBasket,
     Store,
-    Box
+    Box,
+    Boxes,
+    FileBoxIcon
 } from 'lucide-react'
 import { SidebarItem } from './sidebar-item'
 import { usePathname, useRouter } from 'next/navigation'
@@ -21,6 +23,11 @@ const guestRoutes = [
         icon: Layout,
         label: 'Dashboard',
         href: '/'
+    },
+    {
+        icon: Calculator,
+        label: 'Kasir',
+        href: '/kasir'
     },
     {
         icon: Store,
@@ -43,14 +50,14 @@ const guestRoutes = [
         href: '/kategori'
     },
     {
-        icon: Calculator,
-        label: 'Kasir',
-        href: '/kasir'
-    },
-    {
         icon: ShoppingBasket,
         label: 'Bahan Baku',
         href: '/bahan-baku'
+    },
+    {
+        icon: FileBoxIcon,
+        label: 'Inventory',
+        href: '/inventory'
     }
 ]
 
