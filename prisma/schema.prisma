@@ -20,6 +20,7 @@ model Cabang {
     AnggotaCabang AnggotaCabang[]
     createdAt     DateTime?       @default(now())
     updatedAt     DateTime?       @updatedAt
+    Inventory     Inventory[]
 }
 
 model Produk {
@@ -138,6 +139,8 @@ model Inventory {
     detail    InventoryDetail[]
     createdAt DateTime?         @default(now())
     updatedAt DateTime?         @updatedAt
+    cabang    Cabang            @relation(fields: [cabangId], references: [id])
+    cabangId  String            @db.ObjectId
 }
 
 model InventoryDetail {

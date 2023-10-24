@@ -5,32 +5,29 @@ import { DataTable } from './_components/data-table'
 import { useData } from '@/components/providers/data-provider'
 import axios from 'axios'
 import { use, useEffect, useState } from 'react'
-import { BahanBaku } from '@prisma/client'
+import { Inventory } from '@prisma/client'
 import { set } from 'zod'
 import { useRouter } from 'next/navigation'
 
-const BahanBakuPage = () => {
+const InventoryPage = () => {
     const router = useRouter()
     const { detailCabang } = useData()
     const [cabangId, setCabangId] = useState('')
     const [mounted, setMounted] = useState(false)
-    const [bahanBaku, setBahanBaku] = useState<BahanBaku[]>([
+    const [inventory, setInventory] = useState<Inventory[]>([
         {
             id: '',
-            nama: '',
-            satuan: '',
-            stok: 0,
-            hargaPerSatuan: 0,
-            cabangId: '',
+            name: '',
             createdAt: new Date(),
-            updatedAt: new Date()   
+            updatedAt: new Date(),
+            cabangId: '',  
         }
     ])
 
-    const getBahanBaku = async () => {
+    const getInventory = async () => {
         if (cabangId) {
-            const bahan = await axios.get(`/api/cabang/${cabangId}/bahan-baku`)
-            return setBahanBaku(bahan.data)
+            const bahan = await axios.get(`/api/cabang/${cabangId}/inventory`)
+            return setInventory(bahan.data)
         }
     }
 
@@ -39,18 +36,18 @@ const BahanBakuPage = () => {
     }, [detailCabang])
 
     useEffect(() => {
-        if (cabangId) getBahanBaku()
+        if (cabangId) getInventory()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cabangId, router])
 
     return (
         <div className='p-6'>
-            <h1 className='text-2xl font-bold'>Data Bahan Baku</h1>
-            {bahanBaku && (
+            <h1 className='text-2xl font-bold'>Data Inventory Cabang</h1>
+            {inventory && (
                 <DataTable
-                    onDataChange={getBahanBaku}
+                    onDataChange={getInventory}
                     columns={columns}
-                    data={bahanBaku}
+                    data={inventory}
                     cabangId={detailCabang?.id}
                 />
             )}
@@ -58,4 +55,4 @@ const BahanBakuPage = () => {
     )
 }
 
-export default BahanBakuPage
+export default InventoryPage
