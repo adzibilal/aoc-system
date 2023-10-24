@@ -58,6 +58,7 @@ export function DataTable<TData, TValue>({
         username: '',
         password: '',
         role: '',
+        image: '',
         createdAt: new Date(),
         updatedAt: new Date()
     })
