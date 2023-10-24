@@ -43,11 +43,6 @@ const guestRoutes = [
         href: '/kategori'
     },
     {
-        icon: Book,
-        label: 'Resep',
-        href: '/resep'
-    },
-    {
         icon: Calculator,
         label: 'Kasir',
         href: '/kasir'

@@ -2,9 +2,17 @@
 
 import { Produk } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Badge, Pencil, Trash } from 'lucide-react'
+import {
+    ArrowUpDown,
+    Badge,
+    BookMarked,
+    Pencil,
+    Trash
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { rupiahFormat } from '@/lib/utils'
 
 interface ColumnProduk {
     id: string
@@ -63,6 +71,11 @@ export const columns: ColumnDef<ColumnProduk>[] = [
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
             )
+        },
+        cell: ({ row }) => {
+            const harga = row?.original?.harga
+
+            return <div>{rupiahFormat(harga)}</div>
         }
     },
     // buat column kategori.nama
@@ -81,7 +94,7 @@ export const columns: ColumnDef<ColumnProduk>[] = [
             )
         },
         cell: ({ row }) => {
-            const nama  = row?.original?.kategori?.nama
+            const nama = row?.original?.kategori?.nama
 
             return <div>{nama}</div>
         }
@@ -101,7 +114,7 @@ export const columns: ColumnDef<ColumnProduk>[] = [
                         onClick={() => table?.options?.meta?.handleDelete(id)}>
                         <Trash className='h-4 w-4' />
                     </Button>
-                    <Button
+                    {/* <Button
                         variant='default'
                         size='sm'
                         className='w-max'
@@ -110,7 +123,12 @@ export const columns: ColumnDef<ColumnProduk>[] = [
                             table?.options?.meta?.handleEdit(row.original)
                         }>
                         <Pencil className='h-4 w-4' />
-                    </Button>
+                    </Button> */}
+                    <Link href={`/produk/${id}`}>
+                        <Button variant='outline' size='sm' className='w-max'>
+                            <Pencil className='h-4 w-4' />
+                        </Button>
+                    </Link>
                 </div>
             )
         }
