@@ -58,6 +58,8 @@ export function DataTable<TData, TValue>({
         username: '',
         password: '',
         role: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
     })
 
     const handleDelete = async (id: string) => {  

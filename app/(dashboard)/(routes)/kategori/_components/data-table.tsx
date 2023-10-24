@@ -51,7 +51,9 @@ export function DataTable<TData, TValue>({
     const [isEditing, setIsEditing] = React.useState(false)
     const [dataEdit, setDataEdit] = React.useState<KategoriProduk>({
         id: '',
-        nama: ''
+        nama: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
     })
 
     const handleDelete = async (id: string) => {

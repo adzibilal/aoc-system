@@ -59,7 +59,9 @@ export function DataTable<TData, TValue>({
         deskripsi: '',
         harga: 0,
         cabangId: cabangId!,
-        kategoriProdukId: ''
+        kategoriProdukId: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
     })
 
     const handleDelete = async (id: string) => {
