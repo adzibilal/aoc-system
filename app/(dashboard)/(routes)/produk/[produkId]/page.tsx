@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeftIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
 import { ProdukForm } from './_components/produk-form'
+import { ImageForm } from './_components/image-form'
 
 const ProdukIdPage = async ({ params }: { params: { produkId: string } }) => {
     const produk = await db.produk.findUnique({
@@ -41,16 +42,19 @@ const ProdukIdPage = async ({ params }: { params: { produkId: string } }) => {
                     Kembali
                 </Button>
             </Link>
-            <ProdukForm
-                initialData={{
-                    nama: produk?.nama || '',
-                    deskripsi: produk?.deskripsi || '',
-                    harga: produk?.harga || 0,
-                    kategoriProdukId: produk?.kategori?.id || ''
-                }}
-                produkId={produk?.id}
-                kategori={produk?.kategori?.nama}
-            />
+            <div className='flex gap-5 items-start justify-between w-full max-xl:flex-col'>
+                <ImageForm image={produk?.image!} produkId={produk?.id!} />
+                <ProdukForm
+                    initialData={{
+                        nama: produk?.nama || '',
+                        deskripsi: produk?.deskripsi || '',
+                        harga: produk?.harga || 0,
+                        kategoriProdukId: produk?.kategori?.id || ''
+                    }}
+                    produkId={produk?.id}
+                    kategori={produk?.kategori?.nama}
+                />
+            </div>
             <h1 className='text-xl mt-5 font-bold'>Resep Produk</h1>
             <DataTable
                 cabangId={produk?.cabangId}

@@ -29,6 +29,7 @@ model Produk {
     deskripsi        String?
     harga            Float
     bahanBakuResep   Resep[]
+    image            String?
     Cabang           Cabang          @relation(fields: [cabangId], references: [id])
     cabangId         String          @db.ObjectId
     kategori         KategoriProduk? @relation(fields: [kategoriProdukId], references: [id])
@@ -117,6 +118,7 @@ model Pengguna {
     password      String
     role          String
     nama          String
+    image         String?
     AnggotaCabang AnggotaCabang[]
     Pesanan       Pesanan[]
     createdAt     DateTime?       @default(now())

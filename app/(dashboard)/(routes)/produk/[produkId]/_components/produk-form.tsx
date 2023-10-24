@@ -113,7 +113,7 @@ export const ProdukForm = ({
     }, [produkId])
 
     return (
-        <div className='mt-6 border bg-zinc-50 rounded-md p-4'>
+        <div className='mt-6 border bg-zinc-50 rounded-md p-4 w-full h-full'>
             <div className='flex font-medium items-center justify-between'>
                 Detail Produk
                 <Button onClick={toggleEdit} variant='ghost'>
