@@ -17,8 +17,10 @@ import {
 } from 'lucide-react'
 import { SidebarItem } from './sidebar-item'
 import { usePathname, useRouter } from 'next/navigation'
+import useSessionStore from '@/store/sessions'
+import { useData } from '@/components/providers/data-provider'
 
-const guestRoutes = [
+const adminRoutes = [
     {
         icon: Layout,
         label: 'Dashboard',
@@ -61,25 +63,47 @@ const guestRoutes = [
     }
 ]
 
-const teacherRoutes = [
+const staffRoutes = [
     {
-        icon: List,
-        label: 'Courses',
-        href: '/teacher/courses'
+        icon: Layout,
+        label: 'Dashboard',
+        href: '/'
     },
     {
-        icon: BarChart,
-        label: 'Analytics',
-        href: '/teacher/analytics'
+        icon: Calculator,
+        label: 'Kasir',
+        href: '/kasir'
+    },
+    {
+        icon: Coffee,
+        label: 'Produk',
+        href: '/produk'
+    },
+    {
+        icon: Box,
+        label: 'Kategori',
+        href: '/kategori'
+    },
+    {
+        icon: ShoppingBasket,
+        label: 'Bahan Baku',
+        href: '/bahan-baku'
+    },
+    {
+        icon: FileBoxIcon,
+        label: 'Inventory',
+        href: '/inventory'
     }
 ]
 
 export const SidebarRoutes = () => {
     const pathname = usePathname()
+    //@ts-ignore
+    const {userData} = useData()
 
-    const isTeacherPage = pathname?.includes('/teacher')
+    const isAdmin = userData?.role === 'admin'
 
-    const routes = isTeacherPage ? teacherRoutes : guestRoutes
+    const routes = isAdmin ?  adminRoutes : staffRoutes
     return (
         <div className='flex flex-col w-full'>
             {routes.map(route => (

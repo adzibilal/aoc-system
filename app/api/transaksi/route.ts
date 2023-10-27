@@ -30,6 +30,60 @@ export async function POST(req: Request) {
             }
         })
 
+        if (values.transaksi.status === 'LUNAS') {
+            for (const item of values.transaksi.itemCart) {
+                const resep = await db.resep.findMany({
+                    where: {
+                        produkId: item.item.id
+                    }
+                })
+
+                if (resep.length > 0) {
+                    for (const bahan of resep) {
+                        const bahanBaku = await db.bahanBaku.findUnique({
+                            where: {
+                                id: bahan.bahanBakuId
+                            }
+                        })
+
+                        if (!bahanBaku) {
+                            return new NextResponse(
+                                `Bahan baku ${bahan.bahanBakuId} tidak ditemukan`,
+                                { status: 404 }
+                            )
+                        }
+
+                        // Calculate the required stock based on item quantity (item.qty)
+                        const requiredStock = bahan.jumlah * item.qty
+
+                        if (bahanBaku.stok < requiredStock) {
+                            const errorMessage = `Stok bahan baku ${bahanBaku.nama} tidak mencukupi`
+                            const responseMessage = { message: errorMessage }
+
+                            return new NextResponse(
+                                JSON.stringify(responseMessage),
+                                {
+                                    status: 400,
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                }
+                            )
+                        }
+
+                        await db.bahanBaku.update({
+                            where: {
+                                id: bahan.bahanBakuId
+                            },
+                            data: {
+                                stok: bahanBaku.stok - requiredStock
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
         return NextResponse.json(transaksi)
     } catch (error) {
         console.log('[ADD TRANSAKSI]', error)

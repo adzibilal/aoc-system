@@ -34,7 +34,7 @@ const HomePage = ({ params }: { params: { userId: string } }) => {
 
     const router = useRouter()
     const userId = params.userId
-    const [cabang, setCabang] = useState<Cabang[]>([])
+    const [cabang, setCabang] = useState([])
 
     const getCabangByUserId = async (userId: string) => {
         try {
@@ -47,8 +47,10 @@ const HomePage = ({ params }: { params: { userId: string } }) => {
         }
     }
     const dataCabang = cabang.map(item => ({
-        value: item.id,
-        label: item.nama
+        //@ts-ignore
+        value: item.cabang.id,
+        //@ts-ignore
+        label: item.cabang.nama
     }))
 
     useEffect(() => {

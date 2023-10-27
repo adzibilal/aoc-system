@@ -43,6 +43,7 @@ export default function Page() {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+            toast.loading('Loading...')
             const response = await axios.post('/api/login', {
                 ...values,
                 password: md5(values.password)
@@ -60,7 +61,7 @@ export default function Page() {
             localStorage.setItem('session', JSON.stringify(session))
 
             useSessionStore.setState({ user: response.data, expDateTime: expDateTime.toString() })
-
+            toast.dismiss()
             toast.success('Login Berhasil')
             router.push(`/selectcabang/${response.data.id}`)
         } catch {

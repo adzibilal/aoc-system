@@ -16,21 +16,6 @@ interface ListPesananProps {
 const ListPesanan = ({ transaksiUnpay, onSuccessBayar }: ListPesananProps) => {
     const [isOpen, setIsOpen] = useState(false)
 
-    const handleBayar = async (id: string) => {
-        try {
-            toast.loading('Memproses pembayaran')
-            await axios.patch(`/api/transaksi/${id}`, {
-                status: 'LUNAS'
-            })
-            onSuccessBayar()
-
-            toast.dismiss()
-            toast.success('Berhasil membayar pesanan')
-        } catch (error) {
-            toast.error('Gagal membayar pesanan')
-        }
-    }
-
     return (
         <div className=''>
             <div className='relative' onClick={() => setIsOpen(true)}>
@@ -70,10 +55,6 @@ const ListPesanan = ({ transaksiUnpay, onSuccessBayar }: ListPesananProps) => {
                                 <div className='flex gap-2'>
                                     <Button variant='outline' className=''>
                                         Detail
-                                    </Button>
-                                    <Button
-                                        onClick={() => handleBayar(item.id)}>
-                                        Bayar
                                     </Button>
                                 </div>
                             </div>

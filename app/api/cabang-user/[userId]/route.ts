@@ -14,17 +14,16 @@ export async function GET(
             )
         }
 
-        const cabang = await db.cabang.findMany({
+        const myCabang = await db.anggotaCabang.findMany({
+            where: {
+                penggunaId: userId
+            },
             include: {
-                AnggotaCabang: {
-                    where: {
-                        penggunaId: { equals: userId as string }
-                    }
-                }
+                cabang: true
             }
         })
 
-        return NextResponse.json(cabang)
+        return NextResponse.json(myCabang)
     } catch (error) {
         console.error('[CABANG USER]', error)
         return new NextResponse(`CABANG USER ${error ? error : ''}`, {

@@ -1,9 +1,12 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
-export async function GET(req: Request) {
+export async function GET(req: Request, { params }: { params: { cabangId: string } }) {
     try {
         const produk = await db.produk.findMany({
+            where: {
+                cabangId: params.cabangId
+            },
             include: {
                 kategori: true,
             }

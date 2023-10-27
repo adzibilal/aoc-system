@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import ListPesanan from './_components/list-pesanan'
 import { Pesanan } from '@prisma/client'
 import { get } from 'http'
+import jsPDF from 'jspdf'
 
 interface ProdukKasirProps {
     id: string
@@ -107,7 +108,6 @@ const KasirPage = () => {
             router.refresh()
 
             clearCart()
-
         } catch (error) {
             toast.error('Gagal menyimpan transaksi')
         }
@@ -142,8 +142,18 @@ const KasirPage = () => {
 
             setConfirmPay(false)
             setKembalian(true)
-        } catch (error) {
+        } catch (error: any) {
+            toast.dismiss()
             toast.error('Gagal membayar transaksi')
+            // Check if the error has a response message
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.message
+            ) {
+                const errorMessage = error.response.data.message
+                toast.error(errorMessage)
+            }
         }
     }
 
@@ -160,6 +170,11 @@ const KasirPage = () => {
         setUangTunai(0)
         setConfirmPay(false)
     }
+
+    const generateReceipt = () => {
+        toast.success('Comming soon')
+    }
+
     return (
         <div className='p-6 bg-zinc-50 kasir-page'>
             <div className='flex justify-between items-center'>
@@ -171,13 +186,18 @@ const KasirPage = () => {
             </div>
 
             <div className='grid grid-cols-[1fr_400px] gap-5 items-start'>
-                {produk && (
+                {produk.length !== 0 ? (
                     <div className='grid grid-cols-4 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-3'>
                         {produk.map(item => (
                             <ProdukCard key={item.id} item={item} />
                         ))}
                     </div>
+                ) : (
+                    <div className='text-center text-gray-400 h-32 flex items-center justify-center'>
+                        Belum ada produk
+                    </div>
                 )}
+
                 <div className='cart bg-white shadow-md rounded-md p-3 sticky top-[90px] transition'>
                     <h1 className='text-lg font-bold mb-1'>Pesanan</h1>
                     {itemCart.map(item => (
@@ -378,6 +398,12 @@ const KasirPage = () => {
                             )}
                         </p>
 
+                        <Button
+                            className='w-full mb-2'
+                            variant='secondary'
+                            onClick={() => generateReceipt()}>
+                            Cetak Struk
+                        </Button>
                         <Button
                             className='w-full'
                             variant='default'
