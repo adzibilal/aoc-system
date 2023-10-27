@@ -11,6 +11,13 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ImageIcon, MinusCircle, PlusCircle } from 'lucide-react'
 import ItemCart from './_components/item-cart'
+import useKasirStore from '@/store/kasirPage'
+import toast from 'react-hot-toast'
+import useSessionStore from '@/store/sessions'
+import { Input } from '@/components/ui/input'
+import ListPesanan from './_components/list-pesanan'
+import { Pesanan } from '@prisma/client'
+import { get } from 'http'
 
 interface ProdukKasirProps {
     id: string
@@ -36,40 +43,30 @@ interface itemCart {
 }
 
 const KasirPage = () => {
-    const router = useRouter()
-    const { detailCabang } = useData()
-    const [cabangId, setCabangId] = useState('')
-    const [isChart, setIsChart] = useState(false)
-    const [produk, setProduk] = useState<ProdukKasirProps[]>([
-        {
-            id: '',
-            nama: '',
-            deskripsi: '',
-            harga: 0,
-            image: '',
-            cabangId: cabangId!,
-            kategoriProdukId: '',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            kategori: {
-                id: '',
-                nama: '',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            }
-        }
-    ])
-    const [itemCart, setItemCart] = useState<itemCart[]>([])
+    const {
+        cabangId,
+        setCabangId,
+        isChart,
+        setIsChart,
+        produk,
+        setProduk,
+        itemCart,
+        setItemCart,
+        updateCart,
+        getProduk,
+        incrementItemQty,
+        decrementItemQty
+    } = useKasirStore() // Access the store state and actions
 
-    const getProduk = async () => {
-        if (cabangId) {
-            const produk = await axios.get(`/api/kasir/${cabangId}/produk`)
-            return setProduk(produk.data)
-        }
-    }
+    const router = useRouter()
+    const { detailCabang, userData } = useData()
+    const [transaksiUnpay, setTransaksiUnpay] = useState<Pesanan[]>([])
+
+    const [namaPelanggan, setNamaPelanggan] = useState('')
 
     useEffect(() => {
         setCabangId(detailCabang?.id || '')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [detailCabang])
 
     useEffect(() => {
@@ -77,28 +74,54 @@ const KasirPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cabangId, router])
 
-    const updateCart = (itemWithQty: itemCart) => {
-        console.error(itemWithQty)
-        setIsChart(true)
-        const newCart = [...itemCart]
-        const existingItem = newCart.find(
-            item => item.item.id === itemWithQty.item.id
-        )
-        if (existingItem) {
-            existingItem.qty = itemWithQty.qty
-            if (existingItem.qty === 0) {
-                const index = newCart.indexOf(existingItem)
-                newCart.splice(index, 1)
-            }
-        } else {
-            newCart.push(itemWithQty)
+    const getTransaksiUnpay = async () => {
+        if (!cabangId) return
+        try {
+            const trans = await axios.get(
+                `/api/cabang/${cabangId}/transaksi/unpay`
+            )
+            setTransaksiUnpay(trans.data)
+        } catch (error) {
+            toast.error('Gagal mengambil data transaksi unpay')
         }
-        setItemCart(newCart)
     }
 
+    useEffect(() => {
+        getTransaksiUnpay()
+    }, [cabangId])
+
+    const handleSimpanTransaksi = async () => {
+        console.log('simpan transaksi', itemCart)
+        const cabangId = itemCart[0].item.cabangId
+        const penggunaId = userData?.id
+        const transaksi = { itemCart, cabangId, penggunaId, namaPelanggan }
+        try {
+            await axios.post('/api/transaksi', {
+                transaksi
+            })
+            toast.success('Berhasil menyimpan transaksi')
+            router.refresh()
+
+            clearCart()
+        } catch (error) {
+            toast.error('Gagal menyimpan transaksi')
+        }
+    }
+
+    const clearCart = () => {
+        setItemCart([])
+        getTransaksiUnpay()
+        setNamaPelanggan('')
+    }
     return (
         <div className='p-6 bg-zinc-50 kasir-page'>
-            <h1 className='text-2xl font-bold mb-5'>Kasir Page</h1>
+            <div className='flex justify-between items-center'>
+                <h1 className='text-2xl font-bold mb-5'>Kasir Page</h1>
+                <ListPesanan
+                    onSuccessBayar={() => clearCart()}
+                    transaksiUnpay={transaksiUnpay}
+                />
+            </div>
 
             <div
                 className={cn('grid grid-cols-[1fr] gap-5 items-start', {
@@ -107,11 +130,7 @@ const KasirPage = () => {
                 {produk && (
                     <div className='grid grid-cols-4 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-3'>
                         {produk.map(item => (
-                            <ProdukCard
-                                key={item.id}
-                                item={item}
-                                onUpdateCart={updateCart}
-                            />
+                            <ProdukCard key={item.id} item={item} />
                         ))}
                     </div>
                 )}
@@ -146,11 +165,25 @@ const KasirPage = () => {
                                     </div>
                                     {/* fungsi tambah kurang item cart */}
                                     <div className='flex items-center gap-1'>
-                                        <Button size='icon' variant='outline' className='scale-75'>
+                                        <Button
+                                            size='icon'
+                                            variant='outline'
+                                            className='scale-75'
+                                            onClick={() =>
+                                                decrementItemQty(item.item.id)
+                                            }>
                                             <MinusCircle />
                                         </Button>
-                                        <div className='border w-[30px] h-[30px] rounded-sm flex items-center justify-center'>{item.qty}</div>
-                                        <Button size='icon' variant='outline' className='scale-75'>
+                                        <div className='border w-[30px] h-[30px] rounded-sm flex items-center justify-center'>
+                                            {item.qty}
+                                        </div>
+                                        <Button
+                                            size='icon'
+                                            variant='outline'
+                                            className='scale-75'
+                                            onClick={() =>
+                                                incrementItemQty(item.item.id)
+                                            }>
                                             <PlusCircle />
                                         </Button>
                                     </div>
@@ -178,6 +211,25 @@ const KasirPage = () => {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className='bg-zinc-100 rounded-md p-3 mb-3'>
+                                {/* input nama pelanggan */}
+                                <Input
+                                    placeholder='Nama Pelanggan'
+                                    value={namaPelanggan}
+                                    className='focus:!ring-0 focus:!outline-none'
+                                    onChange={e =>
+                                        setNamaPelanggan(e.target.value)
+                                    }
+                                />
+                            </div>
+
+                            <Button
+                                className='w-full mb-2'
+                                variant='secondary'
+                                onClick={handleSimpanTransaksi}>
+                                Simpan Transaksi
+                            </Button>
                             <Button className='w-full' variant='default'>
                                 Bayar
                             </Button>

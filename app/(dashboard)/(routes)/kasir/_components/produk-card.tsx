@@ -1,11 +1,10 @@
-'use client'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { rupiahFormat } from '@/lib/utils'
+import useKasirStore from '@/store/kasirPage'
 import { ImageIcon, MinusCircle, PlusCircle } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
 
 interface ProdukCardProps {
     item: {
@@ -25,22 +24,30 @@ interface ProdukCardProps {
             updatedAt: Date | null
         } | null
     }
-    onUpdateCart: (itemWithQty: { item: any, qty: number }) => void
 }
 
-const ProdukCard: React.FC<ProdukCardProps> = ({ item, onUpdateCart }) => {
-    const [qty, setQty] = useState(0)
+interface ItemCart {
+    item: ProdukCardProps // Menggantinya sesuai dengan tipe item dalam keranjang
+    qty: number
+}
+
+const ProdukCard: React.FC<ProdukCardProps> = ({ item }) => {
+    const { updateCart, incrementItemQty, decrementItemQty, itemCart } = useKasirStore() // Access the updateCart and itemCart from the store
+
+    // Find the item in the cart to display its quantity
+    const cartItem = itemCart.find(cartItem => cartItem.item.id === item.id)
+    const qtyInCart = cartItem ? cartItem.qty : 0
 
     const handleMinusClick = () => {
-        if (qty > 0) {
-            setQty(qty - 1)
-            onUpdateCart({ item, qty: qty - 1 })
-        }
+        decrementItemQty(item.id) // Decrement the quantity of the item in the cart
     }
 
     const handlePlusClick = () => {
-        setQty(qty + 1)
-        onUpdateCart({ item, qty: qty + 1 })
+        if (qtyInCart === 0) {
+            updateCart({ item, qty: 1 }) // Update the cart with a quantity of 1
+        } else {
+            incrementItemQty(item.id) // Increment the quantity of the item in the cart
+        }
     }
 
     return (
@@ -76,8 +83,8 @@ const ProdukCard: React.FC<ProdukCardProps> = ({ item, onUpdateCart }) => {
                         onClick={handleMinusClick}>
                         <MinusCircle />
                     </Button>
-                    <div className="qty w-full border border-zinc-300 rounded-md font-semibold flex items-center justify-center">
-                    {qty}
+                    <div className='qty w-full border border-zinc-300 rounded-md font-semibold flex items-center justify-center'>
+                        {qtyInCart} {/* Display the quantity from Zustand */}
                     </div>
                     <Button
                         className=''
