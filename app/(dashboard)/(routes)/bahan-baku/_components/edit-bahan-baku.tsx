@@ -35,7 +35,11 @@ interface EditBahanBakuProps {
     onSuccess: () => void
 }
 
-const EditBahanBaku = ({ onClose, onSuccess, initialData }: EditBahanBakuProps) => {
+const EditBahanBaku = ({
+    onClose,
+    onSuccess,
+    initialData
+}: EditBahanBakuProps) => {
     const router = useRouter()
 
     const formSchema = z.object({
@@ -161,6 +165,14 @@ const EditBahanBaku = ({ onClose, onSuccess, initialData }: EditBahanBakuProps) 
                                                 {
                                                     value: 'kotak',
                                                     label: 'Kotak'
+                                                },
+                                                {
+                                                    value: 'pack',
+                                                    label: 'Pack'
+                                                },
+                                                {
+                                                    value: 'buah',
+                                                    label: 'Buah'
                                                 }
                                             ]}
                                             {...field}
@@ -239,6 +251,10 @@ const EditBahanBaku = ({ onClose, onSuccess, initialData }: EditBahanBakuProps) 
                                                     value: 'Other',
                                                     label: 'Other'
                                                 },
+                                                {
+                                                    value: 'Display',
+                                                    label: 'Display'
+                                                }
                                             ]}
                                             {...field}
                                         />

@@ -170,6 +170,14 @@ const AddBahanBaku = ({ onClose, onSuccess, cabangId }: AddBahanBakuProps) => {
                                                     value: 'kotak',
                                                     label: 'Kotak'
                                                 },
+                                                {
+                                                    value: 'pack',
+                                                    label: 'Pack'
+                                                },
+                                                {
+                                                    value: 'buah',
+                                                    label: 'Buah'
+                                                }
                                             ]}
                                             {...field}
                                         />
@@ -247,6 +255,10 @@ const AddBahanBaku = ({ onClose, onSuccess, cabangId }: AddBahanBakuProps) => {
                                                     value: 'Other',
                                                     label: 'Other'
                                                 },
+                                                {
+                                                    value: 'Display',
+                                                    label: 'Display'
+                                                }
                                             ]}
                                             {...field}
                                         />
