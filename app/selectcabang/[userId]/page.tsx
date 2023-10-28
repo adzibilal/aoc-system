@@ -26,11 +26,12 @@ import {
 } from '@/components/ui/popover'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/card'
+import { Store } from 'lucide-react'
 
 const HomePage = ({ params }: { params: { userId: string } }) => {
     const [open, setOpen] = useState(false)
     const [selectedCabang, setSelectedCabang] = useState<string | null>(null)
-    const [searchQuery, setSearchQuery] = useState<string>('')
 
     const router = useRouter()
     const userId = params.userId
@@ -38,20 +39,12 @@ const HomePage = ({ params }: { params: { userId: string } }) => {
 
     const getCabangByUserId = async (userId: string) => {
         try {
-            const response = await axios.get(
-                `/api/cabang-user/${userId}`
-            )
+            const response = await axios.get(`/api/cabang-user/${userId}`)
             setCabang(response.data)
         } catch (error) {
             toast.error('Something went wrong')
         }
     }
-    const dataCabang = cabang.map(item => ({
-        //@ts-ignore
-        value: item.cabang.id,
-        //@ts-ignore
-        label: item.cabang.nama
-    }))
 
     useEffect(() => {
         getCabangByUserId(userId)
@@ -61,9 +54,6 @@ const HomePage = ({ params }: { params: { userId: string } }) => {
         setSelectedCabang(cabangId)
         setOpen(false)
     }
-    const filteredCabang = dataCabang.filter(cabang =>
-        cabang.label.toLowerCase().includes(searchQuery.toLowerCase())
-    )
 
     const handleSubmit = async () => {
         if (!selectedCabang) {
@@ -88,47 +78,32 @@ const HomePage = ({ params }: { params: { userId: string } }) => {
                 Silahkan Pilih Cabang
             </h1>
 
-            <div className='max-w-md w-full flex flex-col max-md:p-3'>
-                <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                        <button
-                            className='w-full justify-between border p-2 rounded flex items-center'
-                            onClick={() => setOpen(!open)}>
-                            {selectedCabang
-                                ? dataCabang.find(
-                                      cabang => cabang.value === selectedCabang
-                                  )?.label
-                                : 'Pilih Cabang...'}
-                            <CaretSortIcon className='ml-2 h-4 w-4' />
-                        </button>
-                    </PopoverTrigger>
-                    <PopoverContent className='w-full p-2 border rounded'>
-                        <Command className='w-full'>
-                            <Input
-                                placeholder='Cari cabang...'
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                            />
-                            {filteredCabang.length === 0 && (
-                                <CommandEmpty>
-                                    Tidak ada cabang ditemukan.
-                                </CommandEmpty>
+            <div className='w-full flex items-center flex-col max-md:p-3'>
+                <div className='flex gap-3 items-center justify-center flex-wrap md:w-[60%] max-sm:w-[100%] max-sm:p-4'>
+                    {cabang.map((item: any) => (
+                        <Card
+                            key={item.cabang.id}
+                            className='w-[300px] max-sm:w-[100%] p-3 relative cursor-pointer'
+                            onClick={() => handleCabangSelect(item.cabang.id)}>
+                            {selectedCabang === item.cabang.id && (
+                                <div className='absolute top-0 right-0 p-2 text-green-600'>
+                                    <CheckboxIcon className='h-5 w-5' />
+                                </div>
                             )}
-                            <CommandGroup>
-                                {filteredCabang.map(cabang => (
-                                    <CommandItem
-                                        key={cabang.value}
-                                        onSelect={() =>
-                                            handleCabangSelect(cabang.value)
-                                        }>
-                                        {cabang.label}
-                                    </CommandItem>
-                                ))}
-                            </CommandGroup>
-                        </Command>
-                    </PopoverContent>
-                </Popover>
-                <Button className='w-[80%] mx-auto mt-5' onClick={handleSubmit}>
+                            <div className='flex flex-col'>
+                                <div className='text-lg font-bold mb-1'>
+                                    {item.cabang.nama}
+                                </div>
+                                <div className='text-sm line-clamp-1'>
+                                    {item.cabang.alamat}
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+                <Button
+                    className='max-md:w-[80%] w-[20%] mx-auto mt-5'
+                    onClick={handleSubmit}>
                     Pilih Cabang
                 </Button>
             </div>

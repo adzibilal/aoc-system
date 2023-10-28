@@ -11,6 +11,7 @@ import React, {
 import axios from 'axios'
 import { SessionData, UserData } from '@/types'
 import { Cabang } from '@prisma/client'
+import { useCabangStore } from '@/store/selectedCabang'
 
 // Define the shape of your data (you can replace this with your own data structure)
 type Data = {
@@ -67,6 +68,9 @@ export function DataProvider({ children }: DataProviderProps): ReactElement {
 
     const fetchData = async () => {
         const result = await axios(`/api/cabang/${cabangId}`)
+        console.debug(result.data, 'result cabang')
+        useCabangStore.setState({ cabang: result.data })
+        console.debug(useCabangStore.getState().cabang, 'state cabang')
         setDetailCabang(result.data)
     }
 

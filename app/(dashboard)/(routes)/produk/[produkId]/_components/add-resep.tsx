@@ -62,13 +62,16 @@ const AddResep = ({
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+            toast.loading('Loading...')
             // console.error(values)
             await axios.post(`/api/produk/${produkId}/resep`, values)
+            toast.dismiss()
             toast.success('Resep ditambahkan')
             onClose()
             router.refresh()
             onSuccess()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

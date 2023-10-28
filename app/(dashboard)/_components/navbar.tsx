@@ -5,6 +5,7 @@ import React from 'react'
 import toast from 'react-hot-toast'
 import { MobileSidebar } from './mobile-sidebar'
 import { useData } from '@/components/providers/data-provider'
+import SelectCabang from './select-cabang'
 
 const Navbar = () => {
     const { userData } = useData()
@@ -16,6 +17,8 @@ const Navbar = () => {
                 <MobileSidebar />
                 <div className=''>Hello {userData?.nama}</div>
             </div>
+            <div className="flex items-center gap-2">
+            <SelectCabang />
             <Button
                 variant='secondary'
                 onClick={() => {
@@ -25,6 +28,7 @@ const Navbar = () => {
                 }}>
                 Logout
             </Button>
+            </div>
         </nav>
     )
 }
