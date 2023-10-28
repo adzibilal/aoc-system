@@ -68,11 +68,14 @@ const AddAnggota = ({ onClose, cabangId }: AddAnggotaProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.post(`/api/cabang/${cabangId}/anggota`, values)
+            toast.dismiss()
             toast.success('Cabang updated')
             onClose()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }
