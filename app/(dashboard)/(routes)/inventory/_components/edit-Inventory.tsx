@@ -61,12 +61,15 @@ const EditInventory = ({ onClose, onSuccess, initialData }: EditInventoryProps) 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.patch(`/api/inventory/${initialData.id}`, values)
+            toast.dismiss()
             toast.success('Inventory diedit')
             onClose()
             onSuccess()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

@@ -86,11 +86,14 @@ export const ProdukForm = ({
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.patch(`/api/produk/${produkId}`, values)
+            toast.dismiss()
             toast.success('Produk updated')
             toggleEdit()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

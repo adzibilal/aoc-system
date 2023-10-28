@@ -66,14 +66,17 @@ const EditPengguna = ({ onClose, initialData }: EditPenggunaProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.patch(`/api/pengguna/${initialData.id}`, {
                 ...values,
                 value: md5(values.password)
             })
+            toast.dismiss()
             toast.success('Pengguna diedit')
             onClose()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

@@ -63,14 +63,17 @@ const AddAnggota = ({ onClose }: AddAnggotaProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.post(`/api/pengguna/`, {
                 ...values,
                 password: md5(values.password)
             })
+            toast.dismiss()
             toast.success('Pengguna ditambahkan')
             onClose()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

@@ -53,11 +53,14 @@ const EditKategori = ({ onClose, initialData }: EditKategoriProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.patch(`/api/kategori/${initialData.id}`, values)
+            toast.dismiss()
             toast.success('Kategori diedit')
             onClose()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

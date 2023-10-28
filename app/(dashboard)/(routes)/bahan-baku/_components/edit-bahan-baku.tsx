@@ -61,6 +61,9 @@ const EditBahanBaku = ({ onClose, onSuccess, initialData }: EditBahanBakuProps) 
         hargaPerSatuan: z.string().min(1, {
             message: 'Harga per satuan wajib di isi'
         }),
+        kategori: z.string().min(1, {
+            message: 'Kategori wajib di isi'
+        }),
         cabangId: z.string().min(1, {
             message: 'Cabang wajib di isi'
         })
@@ -79,13 +82,16 @@ const EditBahanBaku = ({ onClose, onSuccess, initialData }: EditBahanBakuProps) 
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+            toast.loading('Loading...')
             // console.error(values)
             await axios.patch(`/api/bahan-baku/${initialData.id}`, values)
+            toast.dismiss()
             toast.success('Bahan Baku diedit')
             onClose()
             onSuccess()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }
@@ -193,6 +199,47 @@ const EditBahanBaku = ({ onClose, onSuccess, initialData }: EditBahanBakuProps) 
                                             disabled={isSubmitting}
                                             placeholder='Harga Per Satuan ...'
                                             type='number'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='kategori'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Kategori</FormLabel>
+                                    <FormControl>
+                                        <Combobox
+                                            options={[
+                                                {
+                                                    value: 'Liquid',
+                                                    label: 'Liquid'
+                                                },
+                                                {
+                                                    value: 'Syrup',
+                                                    label: 'Syrup'
+                                                },
+                                                {
+                                                    value: 'Powder',
+                                                    label: 'Powder'
+                                                },
+                                                {
+                                                    value: 'Coffee Beans',
+                                                    label: 'Coffee Beans'
+                                                },
+                                                {
+                                                    value: 'Tea bag',
+                                                    label: 'Tea bag'
+                                                },
+                                                {
+                                                    value: 'Other',
+                                                    label: 'Other'
+                                                },
+                                            ]}
                                             {...field}
                                         />
                                     </FormControl>

@@ -21,11 +21,14 @@ const DeleteCabang = ({ cabangId }: DeleteCabangProps) => {
 
     const onSubmit = async () => {
         try {
+            toast.loading('Loading...')
             await axios.delete(`/api/cabang/${cabangId}`)
+            toast.dismiss()
             toast.success('Cabang deleted')
             router.push('/cabang')
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Cabang Ini Memiliki Anggota')
         }
     }

@@ -14,18 +14,7 @@ const BahanBakuPage = () => {
     const { detailCabang } = useData()
     const [cabangId, setCabangId] = useState('')
     const [mounted, setMounted] = useState(false)
-    const [bahanBaku, setBahanBaku] = useState<BahanBaku[]>([
-        {
-            id: '',
-            nama: '',
-            satuan: '',
-            stok: 0,
-            hargaPerSatuan: 0,
-            cabangId: '',
-            createdAt: new Date(),
-            updatedAt: new Date()   
-        }
-    ])
+    const [bahanBaku, setBahanBaku] = useState<BahanBaku[]>([])
 
     const getBahanBaku = async () => {
         if (cabangId) {

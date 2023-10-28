@@ -29,7 +29,7 @@ export async function PATCH(
         const { bahanBakuId } = params
         const values = await req.json()
 
-        const { nama, satuan, stok, hargaPerSatuan, cabangId } = values
+        const { nama, satuan, stok, hargaPerSatuan, cabangId, kategori } = values
         const parseStok = parseFloat(stok)
         const parseHarga = parseFloat(hargaPerSatuan)
 
@@ -42,6 +42,7 @@ export async function PATCH(
                 satuan,
                 stok: parseStok,
                 hargaPerSatuan: parseHarga,
+                kategori,
                 cabangId
             }
         })

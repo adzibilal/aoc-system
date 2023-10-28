@@ -58,6 +58,7 @@ export function DataTable<TData, TValue>({
         satuan: '',
         stok: 0,
         hargaPerSatuan: 0,
+        kategori: '',
         cabangId: cabangId!,
         createdAt: new Date(),
         updatedAt: new Date()

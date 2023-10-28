@@ -65,6 +65,9 @@ const AddBahanBaku = ({ onClose, onSuccess, cabangId }: AddBahanBakuProps) => {
         hargaPerSatuan: z.string().min(1, {
             message: 'Harga per satuan wajib di isi'
         }),
+        kategori: z.string().min(1, {
+            message: 'Kategori wajib di isi'
+        }),
         cabangId: z.string().min(1, {
             message: 'Cabang wajib di isi'
         })
@@ -77,6 +80,7 @@ const AddBahanBaku = ({ onClose, onSuccess, cabangId }: AddBahanBakuProps) => {
             satuan: '',
             stok: '0',
             hargaPerSatuan: '0',
+            kategori: '',
             cabangId: cabangId
         }
     })
@@ -86,12 +90,16 @@ const AddBahanBaku = ({ onClose, onSuccess, cabangId }: AddBahanBakuProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
+
             await axios.post(`/api/bahan-baku/`, values)
+            toast.dismiss()
             toast.success('Bahan Baku ditambahkan')
             onClose()
             router.refresh()
             onSuccess()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }
@@ -199,6 +207,47 @@ const AddBahanBaku = ({ onClose, onSuccess, cabangId }: AddBahanBakuProps) => {
                                             disabled={isSubmitting}
                                             placeholder='Harga Per Satuan ...'
                                             type='number'
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='kategori'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Kategori</FormLabel>
+                                    <FormControl>
+                                        <Combobox
+                                            options={[
+                                                {
+                                                    value: 'Liquid',
+                                                    label: 'Liquid'
+                                                },
+                                                {
+                                                    value: 'Syrup',
+                                                    label: 'Syrup'
+                                                },
+                                                {
+                                                    value: 'Powder',
+                                                    label: 'Powder'
+                                                },
+                                                {
+                                                    value: 'Coffee Beans',
+                                                    label: 'Coffee Beans'
+                                                },
+                                                {
+                                                    value: 'Tea bag',
+                                                    label: 'Tea bag'
+                                                },
+                                                {
+                                                    value: 'Other',
+                                                    label: 'Other'
+                                                },
+                                            ]}
                                             {...field}
                                         />
                                     </FormControl>

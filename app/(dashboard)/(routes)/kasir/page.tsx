@@ -92,6 +92,7 @@ const KasirPage = () => {
 
     useEffect(() => {
         getTransaksiUnpay()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cabangId])
 
     const handleSimpanTransaksi = async () => {

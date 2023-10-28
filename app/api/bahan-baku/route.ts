@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     try {
         const values = await req.json()
 
-        const { nama, satuan, stok, hargaPerSatuan, cabangId } = values
+        const { nama, satuan, stok, hargaPerSatuan, cabangId, kategori } = values
         const parseStok = parseFloat(stok)
         const parseHarga = parseFloat(hargaPerSatuan)
 
@@ -16,6 +16,7 @@ export async function POST(req: Request) {
                 satuan,
                 stok: parseStok,
                 hargaPerSatuan: parseHarga,
+                kategori,
                 cabangId
             }
         })

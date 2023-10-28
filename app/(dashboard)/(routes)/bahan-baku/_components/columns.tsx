@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Pencil, Trash } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 export const columns: ColumnDef<BahanBaku>[] = [
     {
@@ -65,6 +66,26 @@ export const columns: ColumnDef<BahanBaku>[] = [
                     <ArrowUpDown className='ml-2 h-4 w-4' />
                 </Button>
             )
+        }
+    },
+    {
+        accessorKey: 'kategori',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant='ghost'
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }>
+                    Kategori
+                    <ArrowUpDown className='ml-2 h-4 w-4' />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const { kategori } = row.original
+
+            return <Badge>{kategori}</Badge>
         }
     },
     {

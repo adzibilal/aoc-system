@@ -60,11 +60,14 @@ const AddKategori = ({ onClose }: AddKategoriProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.post(`/api/kategori/`, values)
+            toast.dismiss()
             toast.success('Kategori ditambahkan')
             onClose()
             router.refresh()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

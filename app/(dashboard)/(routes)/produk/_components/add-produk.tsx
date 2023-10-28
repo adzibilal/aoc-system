@@ -78,13 +78,16 @@ const AddBahanBaku = ({ onClose, onSuccess, cabangId }: AddBahanBakuProps) => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+            toast.loading('Loading...')
             // console.error(values)
             await axios.post(`/api/produk/`, values)
+            toast.dismiss()
             toast.success('Produk ditambahkan')
             onClose()
             router.refresh()
             onSuccess()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

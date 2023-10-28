@@ -69,12 +69,15 @@ const AddInventory = ({ onClose, onSuccess, cabangId }: AddInventoryProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             // console.error(values)
+            toast.loading('Loading...')
             await axios.post(`/api/inventory/`, values)
+            toast.dismiss()
             toast.success('Inventory ditambahkan')
             onClose()
             router.refresh()
             onSuccess()
         } catch (error) {
+            toast.dismiss()
             toast.error('Something went wrong')
         }
     }

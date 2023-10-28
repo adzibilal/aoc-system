@@ -53,6 +53,7 @@ model BahanBaku {
     satuan         String
     stok           Float
     hargaPerSatuan Float
+    kategori       String?
     Resep          Resep[]
     Cabang         Cabang          @relation(fields: [cabangId], references: [id])
     cabangId       String          @db.ObjectId

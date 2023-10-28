@@ -54,9 +54,11 @@ export function DataTable<TData, TValue>({
         toast.loading('Loading...')
         try {
             await axios.delete(`/api/cabang/${cabangId}/anggota/${id}`)
+            toast.dismiss()
             toast.success('Anggota berhasil dihapus')
         } catch (error) {
             console.log(error)
+            toast.dismiss()
             toast.error('Anggota gagal dihapus')
         }finally{
             setTimeout(() => {
