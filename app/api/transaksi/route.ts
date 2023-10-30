@@ -56,20 +56,20 @@ export async function POST(req: Request) {
                         // Calculate the required stock based on item quantity (item.qty)
                         const requiredStock = bahan.jumlah * item.qty
 
-                        if (bahanBaku.stok < requiredStock) {
-                            const errorMessage = `Stok bahan baku ${bahanBaku.nama} tidak mencukupi`
-                            const responseMessage = { message: errorMessage }
+                        // if (bahanBaku.stok < requiredStock) {
+                        //     const errorMessage = `Stok bahan baku ${bahanBaku.nama} tidak mencukupi`
+                        //     const responseMessage = { message: errorMessage }
 
-                            return new NextResponse(
-                                JSON.stringify(responseMessage),
-                                {
-                                    status: 400,
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }
-                                }
-                            )
-                        }
+                        //     return new NextResponse(
+                        //         JSON.stringify(responseMessage),
+                        //         {
+                        //             status: 400,
+                        //             headers: {
+                        //                 'Content-Type': 'application/json'
+                        //             }
+                        //         }
+                        //     )
+                        // }
 
                         await db.bahanBaku.update({
                             where: {

@@ -67,6 +67,8 @@ const KasirPage = () => {
     const [uangTunai, setUangTunai] = useState(0)
     const [confirmPay, setConfirmPay] = useState(false)
     const [kembalian, setKembalian] = useState(false)
+    const [SearchQuery, setSearchQuery] = useState('')
+    const [searchResult, setSearchResult] = useState<ProdukKasirProps[]>([])
 
     useEffect(() => {
         setCabangId(detailCabang?.id || '')
@@ -94,6 +96,14 @@ const KasirPage = () => {
         getTransaksiUnpay()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cabangId])
+
+    useEffect(() => {
+        if (!SearchQuery) return setSearchResult(produk)
+        const result = produk.filter(item =>
+            item.nama.toLowerCase().includes(SearchQuery.toLowerCase())
+        )
+        setSearchResult(result)
+    }, [SearchQuery, produk])
 
     const handleSimpanTransaksi = async () => {
         const cabangId = itemCart[0].item.cabangId
@@ -186,10 +196,20 @@ const KasirPage = () => {
                 />
             </div>
 
-            <div className='grid grid-cols-[1fr_400px] gap-5 items-start'>
-                {produk.length !== 0 ? (
-                    <div className='grid grid-cols-4 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-3'>
-                        {produk.map(item => (
+            {/* Search Produk */}
+            <div className='mb-5 mt-3'>
+                <Input
+                    placeholder='Cari Produk'
+                    className='focus:!ring-0 focus:!outline-none'
+                    value={SearchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                />
+            </div>
+
+            <div className='grid grid-cols-[1fr_400px] gap-5 items-start max-md:flex max-md:flex-col-reverse '>
+                {searchResult.length !== 0 ? (
+                    <div className='grid grid-cols-4 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-3 max-md:w-full'>
+                        {searchResult.map(item => (
                             <ProdukCard key={item.id} item={item} />
                         ))}
                     </div>
@@ -199,61 +219,63 @@ const KasirPage = () => {
                     </div>
                 )}
 
-                <div className='cart bg-white shadow-md rounded-md p-3 sticky top-[90px] transition'>
+                <div className='cart bg-white shadow-md rounded-md p-3 sticky top-[90px] transition max-md:relative max-md:top-0 max-md:w-full'>
                     <h1 className='text-lg font-bold mb-1'>Pesanan</h1>
-                    {itemCart.map(item => (
-                        <div
-                            className='flex justify-between items-center gap-3'
-                            key={item.item.id}>
-                            {item.item.image ? (
-                                <Image
-                                    src={item.item.image || ''}
-                                    alt={item.item.nama}
-                                    width={100}
-                                    height={100}
-                                    className='w-[50px] h-[50px] object-cover rounded-md bg-center'
-                                />
-                            ) : (
-                                <div className='min-w-[50px] h-[50px] bg-zinc-200 rounded-md flex items-center justify-center'>
-                                    <ImageIcon className='h-7 w-7 text-zinc-500' />
-                                </div>
-                            )}
-                            <div className='w-full my-2 flex justify-between items-center'>
-                                <div className=''>
-                                    <h1 className='font-semibold mb-1'>
-                                        {item.item.nama}
-                                    </h1>
-                                    <div className='price font-semibold text-green-600'>
-                                        {rupiahFormat(item.item.harga)}
+                    <div className='max-h-[45vh] overflow-auto'>
+                        {itemCart.map(item => (
+                            <div
+                                className='flex justify-between items-center gap-3'
+                                key={item.item.id}>
+                                {item.item.image ? (
+                                    <Image
+                                        src={item.item.image || ''}
+                                        alt={item.item.nama}
+                                        width={100}
+                                        height={100}
+                                        className='w-[50px] h-[50px] object-cover rounded-md bg-center'
+                                    />
+                                ) : (
+                                    <div className='min-w-[50px] h-[50px] bg-zinc-200 rounded-md flex items-center justify-center'>
+                                        <ImageIcon className='h-7 w-7 text-zinc-500' />
                                     </div>
-                                </div>
-                                {/* fungsi tambah kurang item cart */}
-                                <div className='flex items-center gap-1'>
-                                    <Button
-                                        size='icon'
-                                        variant='outline'
-                                        className='scale-75'
-                                        onClick={() =>
-                                            decrementItemQty(item.item.id)
-                                        }>
-                                        <MinusCircle />
-                                    </Button>
-                                    <div className='border w-[30px] h-[30px] rounded-sm flex items-center justify-center'>
-                                        {item.qty}
+                                )}
+                                <div className='w-full my-2 flex justify-between items-center'>
+                                    <div className=''>
+                                        <h1 className='font-semibold mb-1'>
+                                            {item.item.nama}
+                                        </h1>
+                                        <div className='price font-semibold text-green-600'>
+                                            {rupiahFormat(item.item.harga)}
+                                        </div>
                                     </div>
-                                    <Button
-                                        size='icon'
-                                        variant='outline'
-                                        className='scale-75'
-                                        onClick={() =>
-                                            incrementItemQty(item.item.id)
-                                        }>
-                                        <PlusCircle />
-                                    </Button>
+                                    {/* fungsi tambah kurang item cart */}
+                                    <div className='flex items-center gap-1'>
+                                        <Button
+                                            size='icon'
+                                            variant='outline'
+                                            className='scale-75'
+                                            onClick={() =>
+                                                decrementItemQty(item.item.id)
+                                            }>
+                                            <MinusCircle />
+                                        </Button>
+                                        <div className='border w-[30px] h-[30px] rounded-sm flex items-center justify-center'>
+                                            {item.qty}
+                                        </div>
+                                        <Button
+                                            size='icon'
+                                            variant='outline'
+                                            className='scale-75'
+                                            onClick={() =>
+                                                incrementItemQty(item.item.id)
+                                            }>
+                                            <PlusCircle />
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                     {itemCart.length === 0 && (
                         <div className='text-center text-gray-400 h-32 flex items-center justify-center'>
                             Belum ada pesanan
@@ -311,22 +333,26 @@ const KasirPage = () => {
                         <h1 className='text-xl mb-5 font-semibold text-center'>
                             Konfirmasi Pesanan
                         </h1>
-                        {itemCart.map((item, index) => (
-                            <div
-                                className='flex items-center justify-between gap-5 p-3 border border-zinc-300 my-2 rounded-md'
-                                key={index}>
-                                <div className=''>
-                                    <div className=''>{item.item.nama}</div>
-                                    <div className='text-sm text-zinc-400'>
-                                        {item.qty} x{' '}
-                                        {rupiahFormat(item.item.harga)}
+                        <div className='max-h-[45vh] overflow-auto pr-2'>
+                            {itemCart.map((item, index) => (
+                                <div
+                                    className='flex items-center justify-between gap-5 p-3 border border-zinc-300 my-2 rounded-md'
+                                    key={index}>
+                                    <div className=''>
+                                        <div className=''>{item.item.nama}</div>
+                                        <div className='text-sm text-zinc-400'>
+                                            {item.qty} x{' '}
+                                            {rupiahFormat(item.item.harga)}
+                                        </div>
+                                    </div>
+                                    <div className='font-semibold text-green-600'>
+                                        {rupiahFormat(
+                                            item.item.harga * item.qty
+                                        )}
                                     </div>
                                 </div>
-                                <div className='font-semibold text-green-600'>
-                                    {rupiahFormat(item.item.harga * item.qty)}
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
 
                         <div className='flex justify-between items-center mb-3 mt-5'>
                             <div className='text-lg font-semibold'>Total</div>
