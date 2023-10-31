@@ -5,14 +5,16 @@ import {
     CardHeader,
     CardTitle
 } from '@/components/ui/card'
+import { rupiahFormat } from '@/lib/utils'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
-const StatDashboard = () => {
+const StatDashboard = ({ data }: any) => {
     return (
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                     <CardTitle className='text-sm font-medium'>
-                        Total Revenue
+                        Pendapatan Bulan Ini
                     </CardTitle>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
@@ -27,16 +29,16 @@ const StatDashboard = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className='text-2xl font-bold'>$45,231.89</div>
+                    <div className='text-2xl font-bold'>{rupiahFormat(data.totalRevenueThisMonth)}</div>
                     <p className='text-xs text-muted-foreground'>
-                        +20.1% from last month
+                        Pendapatan Bulan Ini
                     </p>
                 </CardContent>
             </Card>
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                     <CardTitle className='text-sm font-medium'>
-                        Subscriptions
+                        Pendapatan Hari Ini
                     </CardTitle>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
@@ -53,15 +55,15 @@ const StatDashboard = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className='text-2xl font-bold'>+2350</div>
+                    <div className='text-2xl font-bold'>{rupiahFormat(data.totalRevenueToday)}</div>
                     <p className='text-xs text-muted-foreground'>
-                        +180.1% from last month
+                        Pendapatan Hari Ini
                     </p>
                 </CardContent>
             </Card>
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                    <CardTitle className='text-sm font-medium'>Sales</CardTitle>
+                    <CardTitle className='text-sm font-medium'>Best Seller</CardTitle>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='0 0 24 24'
@@ -76,33 +78,25 @@ const StatDashboard = () => {
                     </svg>
                 </CardHeader>
                 <CardContent>
-                    <div className='text-2xl font-bold'>+12,234</div>
+                    <div className='text-2xl font-bold'>{rupiahFormat(data.bestSeller?.total_pendapatan)}</div>
                     <p className='text-xs text-muted-foreground'>
-                        +19% from last month
+                       {data.bestSeller?.produk?.nama} ({data.bestSeller?.total_penjualan} pcs terjual)
                     </p>
                 </CardContent>
             </Card>
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                     <CardTitle className='text-sm font-medium'>
-                        Active Now
+                        Bahan Baku Habis
                     </CardTitle>
-                    <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 24 24'
-                        fill='none'
-                        stroke='currentColor'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        className='h-4 w-4 text-muted-foreground'>
-                        <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
-                    </svg>
+                    <ExclamationTriangleIcon className='h-4 w-4 text-red-600' />
                 </CardHeader>
                 <CardContent>
-                    <div className='text-2xl font-bold'>+573</div>
-                    <p className='text-xs text-muted-foreground'>
-                        +201 since last hour
+                    <div className='text-2xl font-bold text-red-600'>
+                        {data.bahanBakuHabis}
+                    </div>
+                    <p className='text-xs text-red-600'>
+                        {data.bahanBakuHabis} Bahan Baku habis. Segera restock!
                     </p>
                 </CardContent>
             </Card>

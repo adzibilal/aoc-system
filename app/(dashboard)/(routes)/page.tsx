@@ -27,10 +27,28 @@ import {
 } from '@/components/ui/card'
 import { Overview } from '../_components/overview'
 import { RecentSales } from '../_components/recent-sales'
+import { useEffect, useState } from 'react'
+import { useCabangStore } from '@/store/selectedCabang'
 
 const DashboardPage: NextPage = () => {
-    const { detailCabang } = useData()
+    const detailCabang = useCabangStore((state) => state.cabang)
+    const [recentSales, setRecentSales] = useState([])
+    const [dashboardData, setDashboardData] = useState<any>({})
 
+
+    const getDataDashboard = async () => {
+        const res = await fetch(`/api/cabang/${detailCabang?.id}/dashboard`, {
+            method: 'GET'
+        })
+        const data = await res.json()
+        setDashboardData(data)
+        setRecentSales(data.recentSales)
+    }
+
+    useEffect(() => {
+        getDataDashboard()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [useCabangStore.getState().cabang])
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between my-5'>
@@ -39,7 +57,7 @@ const DashboardPage: NextPage = () => {
                 </h1>
                 <DatePickerWithRange />
             </div>
-            <StatDashboard />
+            <StatDashboard data={dashboardData}/>
 
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-5'>
                 <Card className='col-span-4'>
@@ -54,11 +72,11 @@ const DashboardPage: NextPage = () => {
                     <CardHeader>
                         <CardTitle>Recent Sales</CardTitle>
                         <CardDescription>
-                            You made 265 sales this month.
+                            You made {dashboardData.total_transaction_thismonth} transactions this month.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <RecentSales />
+                        <RecentSales data={recentSales}/>
                     </CardContent>
                 </Card>
             </div>
