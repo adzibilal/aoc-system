@@ -46,12 +46,14 @@ export async function GET(
             }
         })
 
-
         const totalRevenueThisMonth = totalTransaksiThisMonth.reduce(
             (acc, curr) => {
-                return acc + curr.DetailPesanan.reduce((acc, curr) => {
-                    return acc + curr.subtotal
-                }, 0)
+                return (
+                    acc +
+                    curr.DetailPesanan.reduce((acc, curr) => {
+                        return acc + curr.subtotal
+                    }, 0)
+                )
             },
             0
         )
@@ -73,60 +75,74 @@ export async function GET(
             }
         })
 
-        const totalRevenueToday = todayTransaction.reduce(
-            (acc, curr) => {
-                return acc + curr.DetailPesanan.reduce((acc, curr) => {
+        const totalRevenueToday = todayTransaction.reduce((acc, curr) => {
+            return (
+                acc +
+                curr.DetailPesanan.reduce((acc, curr) => {
                     return acc + curr.subtotal
                 }, 0)
-            },
-            0
-        )
+            )
+        }, 0)
 
-        const getBestSeller = await db.detailPesanan.groupBy({
-            by: ['produkId'],
-            where: {
-                Pesanan: {
-                    cabangId: params.cabangId,
-                    tanggal: {
-                        gte: new Date(
-                            new Date().getFullYear(),
-                            new Date().getMonth(),
-                            1
-                        ),
-                        lte: new Date()
+        let bestSeller = null
+
+        try {
+            const getBestSeller = await db.detailPesanan.groupBy({
+                by: ['produkId'],
+                where: {
+                    Pesanan: {
+                        cabangId: params.cabangId,
+                        tanggal: {
+                            gte: new Date(
+                                new Date().getFullYear(),
+                                new Date().getMonth(),
+                                1
+                            ),
+                            lte: new Date()
+                        }
+                    }
+                },
+                _count: {
+                    produkId: true
+                },
+                _sum: {
+                    subtotal: true
+                },
+                orderBy: {
+                    _count: {
+                        produkId: 'desc'
+                    }
+                },
+                take: 1
+            })
+
+            const bestSellerProduk = await db.produk.findMany({
+                where: {
+                    id: {
+                        in: getBestSeller.map(item => item.produkId)
                     }
                 }
-            },
-            _count: {
-                produkId: true
-            },
-            _sum: {
-                subtotal: true
-            },
-            orderBy: {
-                _count: {
-                    produkId: 'desc'
-                }
-            },
-            take: 1,
-        })
+            })
 
-        const bestSellerProduk = await db.produk.findMany({
-            where: {
-                id: {
-                    in: getBestSeller.map((item) => item.produkId)
-                }
+            bestSeller = {
+                produk: bestSellerProduk[0] ? bestSellerProduk[0] : null,
+                total_penjualan: getBestSeller[0]._count.produkId
+                    ? getBestSeller[0]._count.produkId
+                    : 0,
+                total_pendapatan: getBestSeller[0]._sum.subtotal
+                    ? getBestSeller[0]._sum.subtotal
+                    : 0
             }
-        })
-
-        const bestSeller = {
-            produk: bestSellerProduk[0],
-            total_penjualan: getBestSeller[0]._count.produkId,
-            total_pendapatan: getBestSeller[0]._sum.subtotal
+        } catch (error) {
+            bestSeller = {
+                produk: null,
+                total_penjualan: 0,
+                total_pendapatan: 0
+            }
         }
 
         const data = {
-            recentSales,
+            recentSales: recentSales ? recentSales : null,
             total_transaction_thismonth: totalTransaksiThisMonth.length,
             bahanBakuHabis: bahanBakuHabis.length,
             totalRevenueThisMonth,
