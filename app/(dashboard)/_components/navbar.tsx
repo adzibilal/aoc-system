@@ -15,7 +15,7 @@ const Navbar = () => {
         <nav className='h-full text-white p-3 flex items-center justify-between px-6'>
             <div className='flex items-center gap-3'>
                 <MobileSidebar />
-                <div className=''>Hello {userData?.nama}</div>
+                <div className='max-sm:hidden'>Hello {userData?.nama}</div>
             </div>
             <div className="flex items-center gap-2">
             <SelectCabang />

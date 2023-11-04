@@ -51,7 +51,7 @@ const DashboardPage: NextPage = () => {
     }, [useCabangStore.getState().cabang])
     return (
         <div className='p-6'>
-            <div className='flex items-center justify-between my-5'>
+            <div className='flex items-center justify-between my-5 max-sm:flex-col max-sm:items-start max-sm:gap-3'>
                 <h1 className='text-2xl font-bold'>
                     Dashboard Cabang {detailCabang?.nama}
                 </h1>
