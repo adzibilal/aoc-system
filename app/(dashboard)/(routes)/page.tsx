@@ -29,12 +29,12 @@ import { Overview } from '../_components/overview'
 import { RecentSales } from '../_components/recent-sales'
 import { useEffect, useState } from 'react'
 import { useCabangStore } from '@/store/selectedCabang'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const DashboardPage: NextPage = () => {
-    const detailCabang = useCabangStore((state) => state.cabang)
+    const detailCabang = useCabangStore(state => state.cabang)
     const [recentSales, setRecentSales] = useState([])
     const [dashboardData, setDashboardData] = useState<any>({})
-
 
     const getDataDashboard = async () => {
         const res = await fetch(`/api/cabang/${detailCabang?.id}/dashboard`, {
@@ -57,7 +57,7 @@ const DashboardPage: NextPage = () => {
                 </h1>
                 <DatePickerWithRange />
             </div>
-            <StatDashboard data={dashboardData}/>
+            <StatDashboard data={dashboardData} />
 
             <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-5'>
                 <Card className='col-span-4'>
@@ -72,11 +72,39 @@ const DashboardPage: NextPage = () => {
                     <CardHeader>
                         <CardTitle>Recent Sales</CardTitle>
                         <CardDescription>
-                            You made {dashboardData.total_transaction_thismonth} transactions this month.
+                            You made {dashboardData.total_transaction_thismonth}{' '}
+                            transactions this month.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <RecentSales data={recentSales}/>
+                        <RecentSales data={recentSales} />
+                    </CardContent>
+                </Card>
+            </div>
+
+            <div className='grid grid-cols-2 max-md:grid-cols-1 my-5'>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Data Bahan Baku Habis</CardTitle>
+                    </CardHeader>
+                    <CardContent className='space-y-2'>
+                        {dashboardData?.dataBahanBakuHabis?.map(
+                            (item: any, i: number) => (
+                                <div
+                                    key={i}
+                                    className='flex items-center justify-between'>
+                                    <div className='flex items-center gap-2'>
+                                        <ExclamationTriangleIcon className='h-5 w-5 text-yellow-500' />
+                                        <div className='text-sm text-muted-foreground'>
+                                            {item.nama} - {item.kategori}
+                                        </div>
+                                    </div>
+                                    <div className='text-sm text-muted-foreground'>
+                                        {item.stok} {item.satuan}
+                                    </div>
+                                </div>
+                            )
+                        )}
                     </CardContent>
                 </Card>
             </div>

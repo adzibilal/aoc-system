@@ -145,6 +145,7 @@ export async function GET(
             recentSales: recentSales ? recentSales : null,
             total_transaction_thismonth: totalTransaksiThisMonth.length,
             bahanBakuHabis: bahanBakuHabis.length,
+            dataBahanBakuHabis: bahanBakuHabis,
             totalRevenueThisMonth,
             totalRevenueToday,
             bestSeller

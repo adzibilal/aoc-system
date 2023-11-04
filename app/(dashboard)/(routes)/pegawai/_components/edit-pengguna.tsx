@@ -69,7 +69,7 @@ const EditPengguna = ({ onClose, initialData }: EditPenggunaProps) => {
             toast.loading('Loading...')
             await axios.patch(`/api/pengguna/${initialData.id}`, {
                 ...values,
-                value: md5(values.password)
+                password: md5(values.password)
             })
             toast.dismiss()
             toast.success('Pengguna diedit')
